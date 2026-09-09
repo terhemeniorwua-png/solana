@@ -203,6 +203,85 @@ body {
   font-family: "DSemi", monospace;
 }
 
+/* ---------- Section reveal animations ---------- */
+@keyframes curtain-left-to-right {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+.animate-curtain-left-to-right {
+  animation: curtain-left-to-right 0.8s ease-out forwards;
+  clip-path: inset(0 100% 0 0);
+}
+
+@keyframes curtain-top-to-bottom {
+  from {
+    clip-path: inset(0 0 100% 0);
+    transform: scale(1.1);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+    transform: scale(1);
+  }
+}
+
+.animate-curtain-top-to-bottom {
+  animation: curtain-top-to-bottom 0.6s ease-out forwards;
+  clip-path: inset(100% 0 0 0);
+  transform: scale(1.1);
+}
+
+@keyframes stretch-in {
+  from {
+    transform: scaleX(1.1);
+    opacity: 0;
+  }
+  to {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+
+.animate-stretch-in {
+  animation: stretch-in 0.2s ease-out forwards;
+  transform: scaleX(1.2);
+  opacity: 0;
+}
+
+@keyframes flash-background {
+  0% {
+    background-color: var(--flash-bg-default, transparent);
+  }
+  50% {
+    background-color: var(--flash-bg-color, white);
+  }
+  100% {
+    background-color: var(--flash-bg-default, transparent);
+  }
+}
+
+.animate-flash-background {
+  --flash-bg-default: transparent;
+  --flash-bg-color: white;
+  animation: flash-background 0.8s ease-out forwards;
+}
+
+.animate-flash-background > div:first-child {
+  animation: curtain-left-to-right 0.6s ease-out forwards;
+  animation-delay: 0.4s;
+  clip-path: inset(0 100% 0 0);
+}
+
+.animate-flash-background > div:not(:first-child) {
+  animation: curtain-left-to-right 0.6s ease-out forwards;
+  animation-delay: 0.6s;
+  clip-path: inset(0 100% 0 0);
+}
+
 /* ---------- Terminal loader ---------- */
 .terminal-loader {
   width: 65px;
