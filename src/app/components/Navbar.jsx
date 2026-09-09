@@ -1,57 +1,10 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, createElement } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import { ICONS, NAV_MENUS } from "./navData";
 
-const NAV_ITEMS = [
-  {
-    label: "Use Solana",
-    children: [
-      { label: "Use Solana", href: "/use-solana" },
-      { label: "Wallets", href: "/wallets" },
-      { label: "Learn", href: "/learn" },
-      { label: "Staking", href: "/staking" },
-    ],
-  },
-  {
-    label: "Build",
-    children: [
-      { label: "Developer hub", href: "/developers" },
-      { label: "Docs", href: "/docs" },
-      { label: "Templates", href: "/developers/templates" },
-    ],
-  },
-  {
-    label: "Enterprise",
-    children: [
-      { label: "Enterprise", href: "/enterprise" },
-      { label: "Institutional payments", href: "/solutions/institutional-payments" },
-      { label: "Tokenization", href: "/solutions/tokenization" },
-      { label: "Reports", href: "/reports" },
-    ],
-  },
-  {
-    label: "Products",
-    children: [
-      { label: "Products", href: "/products" },
-      { label: "Solana Developer Platform", href: "/solutions/sdp" },
-      { label: "x402", href: "/x402" },
-      { label: "Agent Registry", href: "/agent-registry" },
-      { label: "Skills", href: "/skills" },
-    ],
-  },
-  {
-    label: "Ecosystem",
-    children: [
-      { label: "Ecosystem", href: "/ecosystem" },
-      { label: "Network", href: "/network" },
-      { label: "Events", href: "/events" },
-      { label: "Community", href: "/community" },
-      { label: "News", href: "/news" },
-      { label: "Newsletter", href: "/newsletter" },
-    ],
-  },
-];
+/* ---------------- shared svgs ---------------- */
 
 const ChevronDown = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" className="relative top-px ml-0.5 -mr-1 size-4 opacity-60 transition-transform duration-200 group-data-[state=open]:rotate-180" aria-hidden="true" viewBox="0 0 24 24">
@@ -80,6 +33,12 @@ const ArrowUpDownIcon = () => (
   </svg>
 );
 
+const ArrowRight = ({ className = "" }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 20 20" className={className} aria-hidden="true">
+    <path fillRule="evenodd" clipRule="evenodd" stroke="currentColor" strokeLinecap="square" strokeWidth="2" d="m10 16 4-4-4-4" />
+  </svg>
+);
+
 const SolanaLogo = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="120" height="18" fill="none" style={{ color: "currentColor" }} viewBox="0 0 149 22" className="block h-auto w-28 xl:w-[120px]">
     <defs>
@@ -97,18 +56,234 @@ const SolanaLogo = () => (
   </svg>
 );
 
+/* ---------------- dropdown building blocks (exact replica of live markup) ---------------- */
+
+function SvgIcon({ name, className, width, height }) {
+  const data = ICONS[name];
+  if (!data) return null;
+  const render = (node, key) => {
+    const props = node.a ? { ...node.a } : {};
+    const children = node.k ? node.k.map(render) : null;
+    return createElement(node.tag, { key, ...props }, children);
+  };
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={width ?? data.a.width ?? 24}
+      height={height ?? data.a.height ?? 24}
+      fill={data.a.fill ?? "none"}
+      viewBox={data.a.viewBox}
+      className={className}
+      aria-hidden="true"
+    >
+      {data.k.map(render)}
+    </svg>
+  );
+}
+
+const ROW_HOVER =
+  "group-[.active]/link:bg-gradient-to-r group-[.active]/link:from-transparent group-[.active]/link:via-[10%] group-[.active]/link:via-white/5 group-[.active]/link:to-transparent group-hover/link:bg-gradient-to-r group-hover/link:from-transparent group-hover/link:via-[10%] group-hover/link:via-white/5 group-hover/link:to-transparent";
+
+function HeadingF({ title }) {
+  return (
+    <h3 className="m-0 pt-2 pb-3 xl:pt-1 xl:pb-3 font-brand-mono font-medium text-white/45 text-[11px] tracking-[0.12em] uppercase">
+      {title}
+    </h3>
+  );
+}
+
+function HeadingW({ title, className = "", children }) {
+  return (
+    <section className={className}>
+      <h3 className="m-0 py-3 font-brand-mono text-[11px] font-medium uppercase tracking-[0.12em] text-white/60 xl:pb-3 xl:pt-1">
+        {title}
+      </h3>
+      {children}
+    </section>
+  );
+}
+
+function ItemRow({ item }) {
+  const className = ROW_HOVER + " flex items-start gap-3 max-xl:py-4 xl:py-4";
+  const iconWrap = (
+    <div className="w-[40px] h-[40px] shrink-0 flex items-center justify-center bg-white/[0.06] rounded-lg">
+      <SvgIcon name={item.icon} className="size-[20px] text-white" />
+    </div>
+  );
+  const text = (
+    <div className="min-w-0">
+      <div className="font-medium text-white text-[14px] xl:text-[15px] leading-[1.35]">
+        {item.title}
+      </div>
+      {item.desc && (
+        <div className="text-white/55 mt-0.5 text-[13px] xl:text-[13px] leading-[1.4]">
+          {item.desc}
+        </div>
+      )}
+    </div>
+  );
+  const body = item.variant === "large"
+    ? (<div className={className}>{iconWrap}{text}</div>)
+    : (<div className={ROW_HOVER + " flex items-center gap-2.5 max-xl:py-3.5 xl:py-3"}>
+        <SvgIcon name={item.icon} className="size-[18px] text-white shrink-0" />
+        <div className="font-medium text-white text-[14px]">{item.title}</div>
+      </div>);
+  return (
+    <Link
+      href={item.href}
+      className="block no-underline text-inherit group/link"
+      target={item.ext ? "_blank" : undefined}
+      rel={item.ext ? "noopener noreferrer" : undefined}
+    >
+      {body}
+    </Link>
+  );
+}
+
+function ItemsList({ items }) {
+  return (
+    <div className="divide-y divide-[rgba(238,228,255,0.04)]">
+      {items.map((it) => <ItemRow key={it.title} item={it} />)}
+    </div>
+  );
+}
+
+function SplitColumns({ lists }) {
+  return (
+    <div className="flex flex-col xl:flex-row xl:gap-5 max-xl:divide-y max-xl:divide-[rgba(238,228,255,0.04)]">
+      {lists.map((list, i) => (
+        <div key={i} className="divide-y divide-[rgba(238,228,255,0.04)] flex-1">
+          {list.map((it) => <ItemRow key={it.title} item={it} />)}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function Banner({ banner }) {
+  return (
+    <div
+      className={`p-4 xl:p-5 rounded-xl flex flex-col items-start justify-between gap-4 min-h-[200px] xl:min-h-[260px] text-[14px] xl:text-[15px] leading-[1.5] xl:w-[300px] xl:shrink-0 w-full max-xl:order-2 ${
+        banner.position === "left" ? "xl:order-1" : "xl:order-2"
+      } bg-cover bg-center bg-no-repeat bg-black ${banner.bg || ""}`}
+    >
+      <div>
+        {banner.logo && (
+          <span className={banner.logoClass || ""}>
+            <SvgIcon
+              name={banner.logo}
+              width={banner.logoW ?? undefined}
+              height={banner.logoH ?? undefined}
+            />
+          </span>
+        )}
+        <div className="font-medium text-white text-[17px] xl:text-[20px] leading-[1.2] tracking-[-0.32px] xl:tracking-[-0.4px] mt-1">
+          {banner.title}
+        </div>
+        {banner.desc && (
+          <div className="font-medium text-[rgba(255,255,255,0.64)] mt-1.5 text-[13px] xl:text-[14px] leading-[1.45]">
+            {banner.desc}
+          </div>
+        )}
+      </div>
+      <div className="flex flex-col items-start gap-1.5">
+        {banner.location && (
+          <div className="pr-3 pl-2 h-[28px] xl:h-[30px] font-medium text-white text-[12px] xl:text-[13px] leading-none tracking-[-0.14px] bg-[rgba(25,24,27,0.4)] rounded-full backdrop-blur-[12px] flex items-center">
+            <SvgIcon name="note" className="mr-1.5 size-4" />
+            {banner.location}
+          </div>
+        )}
+        {banner.date && (
+          <div className="pr-3 pl-2 h-[28px] xl:h-[30px] text-white text-[12px] xl:text-[13px] leading-none tracking-[-0.14px] bg-[rgba(25,24,27,0.4)] rounded-full backdrop-blur-[12px] flex items-center">
+            <SvgIcon name="bolt" className="mr-1.5 size-4" />
+            {banner.date}
+          </div>
+        )}
+        {banner.cta && (
+          <div className={banner.location || banner.date ? "mt-2" : ""}>
+            <Link
+              href={banner.href}
+              className="group/cta flex min-h-11 items-center rounded-full bg-white pl-4 pr-2 text-[14px] font-medium leading-none tracking-[-0.16px] text-black text-nowrap transition-colors hover:bg-white/90"
+            >
+              {banner.cta}
+              <ArrowRight className="ml-1 size-5 group-hover/cta:translate-x-[2px] transition-transform duration-200 inline-flex" />
+            </Link>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function ColumnWidth({ width, children }) {
+  const extra =
+    width === "primary"
+      ? "xl:flex-[1.2] xl:min-w-0"
+      : width === "grow"
+        ? "grow xl:min-w-0"
+        : "xl:flex-1 xl:min-w-0";
+  return <div className={`px-2 xl:px-3 ${extra}`}>{children}</div>;
+}
+
+function Group({ group, index }) {
+  if (index === 0) {
+    return (
+      <>
+        <HeadingF title={group.title} />
+        {group.split
+          ? <SplitColumns lists={group.split} />
+          : <ItemsList items={group.items} />}
+      </>
+    );
+  }
+  const Body = group.split ? (
+    <SplitColumns lists={group.split} />
+  ) : (
+    <ItemsList items={group.items} />
+  );
+  return (
+    <HeadingW title={group.title} className={group.divider || ""}>
+      {Body}
+    </HeadingW>
+  );
+}
+
+function Column({ column }) {
+  return (
+    <ColumnWidth width={column.width}>
+      {column.groups.map((g, i) => (
+        <Group key={g.title} group={g} index={i} />
+      ))}
+    </ColumnWidth>
+  );
+}
+
+function PanelContent({ menu }) {
+  const banner = menu.banner ? <Banner banner={menu.banner} /> : null;
+  const orderCls =
+    menu.banner && menu.banner.position === "left" ? "xl:order-2" : "xl:order-1";
+  return (
+    <div className="xl:w-[960px] max-w-full flex flex-col xl:flex-row max-xl:gap-6 xl:gap-3 xl:items-start">
+      {banner}
+      <div
+        className={`order-1 flex w-full flex-1 flex-col max-xl:gap-6 xl:min-w-0 xl:flex-row xl:gap-5 ${orderCls}`}
+      >
+        {menu.columns.map((col) => (
+          <Column key={col.groups[0].title} column={col} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ---------------- navbar ---------------- */
+
 export default function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
-  const [mobileAccordion, setMobileAccordion] = useState(null);
+  const [mobileAccordion, setMobileAccordion] = useState(0);
   const timeoutRef = useRef(null);
-
-  useEffect(() => {
-    const handler = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", handler, { passive: true });
-    return () => window.removeEventListener("scroll", handler);
-  }, []);
+  const headerRef = useRef(null);
 
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? "hidden" : "";
@@ -117,44 +292,97 @@ export default function Navbar() {
     };
   }, [mobileOpen]);
 
-  const handleMouseEnter = (idx) => {
+  useEffect(() => {
+    const onDown = (e) => {
+      if (e.key === "Escape") {
+        setActiveDropdown(null);
+        setMobileOpen(false);
+      }
+      if (headerRef.current && !headerRef.current.contains(e.target)) {
+        setActiveDropdown(null);
+      }
+    };
+    const onScroll = () => {
+      if (window.scrollY > 40) {
+        setActiveDropdown(null);
+      }
+    };
+    document.addEventListener("mousedown", onDown);
+    document.addEventListener("keydown", onDown);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("keydown", onDown);
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, []);
+
+  const enter = (idx) => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     setActiveDropdown(idx);
   };
 
-  const handleMouseLeave = () => {
+  const leave = () => {
     timeoutRef.current = setTimeout(() => setActiveDropdown(null), 150);
   };
 
+  const panelAlign = (menu) =>
+    menu.align === "center"
+      ? "xl:left-1/2 xl:-translate-x-1/2"
+      : "xl:left-0 xl:translate-x-0";
+
+  const PANEL_CLS =
+    "data-[motion^=from-]:fade-in data-[motion^=to-]:fade-out top-[45px] left-0 w-full xl:absolute xl:w-auto [&_data-[slot=navigation-menu-link]]:focus:ring-0 [&_data-[slot=navigation-menu-link]]:focus:outline-none min-w-[320px] bg-[rgba(25,24,27,0.92)] p-2 xl:p-4 rounded-2xl text-[rgba(255,255,255,0.64)] text-[14px] xl:text-[15px] leading-[1.5] backdrop-blur-[20px] xl:max-h-[calc(100dvh-5rem)] xl:overflow-y-auto xl:overscroll-contain xl:border xl:border-white/[0.06] xl:shadow-[0_20px_60px_-12px_rgba(0,0,0,0.6)]";
+
   return (
-    <header className="sticky top-0 z-50">
+    <header ref={headerRef} className="sticky top-0 z-50">
       <nav id="navbar" className="h-14 border-b border-white/10 bg-black/80 backdrop-blur-xl backdrop-saturate-150">
         <div className="mx-auto flex h-full w-full max-w-[1440px] items-center justify-between gap-x-4 px-4 sm:px-5 xl:gap-x-8 xl:px-6">
-          {/* Logo */}
           <Link aria-label="Solana" className="flex h-11 shrink-0 grow-0 items-center !text-white" href="/">
             <SolanaLogo />
           </Link>
 
-          {/* Desktop nav */}
           <div className="ml-auto flex items-center gap-1 md:gap-2 xl:grow">
             <div className="hidden xl:block flex-1">
               <nav aria-label="Main" className="group/navigation-menu relative flex w-full max-w-none flex-1 [&>div]:w-full">
                 <div style={{ position: "relative" }}>
                   <ul className="group flex flex-1 list-none mb-0 flex-wrap gap-2 xl:gap-1 xl:items-center pl-0" dir="ltr">
-                    {NAV_ITEMS.map((item, idx) => (
-                      <li key={item.label} className="relative w-full xl:static xl:w-auto border-b xl:border-b-0 border-white/10">
+                    {NAV_MENUS.map((menu, idx) => (
+                      <li
+                        key={menu.id}
+                        className="relative w-full xl:static xl:w-auto border-b xl:border-b-0 border-white/10"
+                      >
                         <button
                           id={`nav-trigger-${idx}`}
                           data-state={activeDropdown === idx ? "open" : "closed"}
                           aria-expanded={activeDropdown === idx}
+                          data-slot="navigation-menu-trigger"
                           className="group h-9 flex justify-between items-center w-full xl:w-auto py-1.5 xl:py-1 px-4 xl:px-3.5 text-[rgba(255,255,255,0.64)] text-[16px] xl:text-[15px] leading-[1.5] font-normal bg-transparent border-0 rounded-full hover:text-white focus:text-white hover:bg-white/[0.08] focus:bg-white/[0.08] relative transition-colors duration-200 data-[state=open]:text-white data-[state=open]:bg-white/[0.08]"
-                          onMouseEnter={() => handleMouseEnter(idx)}
-                          onMouseLeave={handleMouseLeave}
+                          onMouseEnter={() => enter(idx)}
+                          onMouseLeave={leave}
                           onClick={() => setActiveDropdown(activeDropdown === idx ? null : idx)}
                         >
-                          {item.label}
+                          {menu.label}
                           <ChevronDown />
                         </button>
+                        <AnimatePresence>
+                          {activeDropdown === idx && (
+                            <motion.div
+                              initial={{ opacity: 0, y: -4 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, y: -4 }}
+                              transition={{ duration: 0.12, ease: "easeOut" }}
+                              data-slot="navigation-menu-content"
+                              data-state="open"
+                              data-motion="from-start"
+                              className={`${PANEL_CLS} ${panelAlign(menu)} hidden xl:block`}
+                              onMouseEnter={() => enter(idx)}
+                              onMouseLeave={leave}
+                            >
+                              <PanelContent menu={menu} />
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
                       </li>
                     ))}
                   </ul>
@@ -162,9 +390,7 @@ export default function Navbar() {
               </nav>
             </div>
 
-            {/* Right side actions */}
             <div className="flex items-center gap-3">
-              {/* Search */}
               <div className="group relative shrink-0">
                 <button type="button" aria-label="Search" title="Search (⌘ K)" className="m-0 flex size-11 cursor-pointer items-center justify-center gap-2 rounded-lg border border-white/15 bg-white/[0.06] p-0 text-white/70 transition-colors duration-200 hover:border-white/25 hover:bg-white/[0.1] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 md:h-9 md:w-auto md:px-2.5">
                   <SearchIcon />
@@ -173,7 +399,6 @@ export default function Navbar() {
                 </button>
               </div>
 
-              {/* Language selector */}
               <div className="relative items-center hidden xl:flex">
                 <button className="p-0 border-0 inline-flex items-center h-9 text-[#848895] text-base hover:text-white transition-colors duration-200" type="button">
                   <GlobeIcon />
@@ -184,7 +409,6 @@ export default function Navbar() {
             </div>
           </div>
 
-          {/* Mobile hamburger */}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
             className="-m-1 flex size-11 cursor-pointer flex-col items-center justify-center gap-1 border-0 p-3 xl:hidden"
@@ -200,7 +424,6 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* Mobile menu */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
@@ -210,20 +433,17 @@ export default function Navbar() {
             transition={{ duration: 0.3 }}
             className="xl:hidden fixed inset-0 top-14 bg-black/98 backdrop-blur-xl overflow-y-auto z-50"
           >
-            <div className="px-6 py-6 space-y-1">
-              {NAV_ITEMS.map((item, idx) => (
-                <div key={item.label}>
+            <div className="px-6 py-6 space-y-3">
+              {NAV_MENUS.map((menu, idx) => (
+                <div key={menu.id}>
                   <button
-                    onClick={() =>
-                      setMobileAccordion(mobileAccordion === idx ? null : idx)
-                    }
-                    className="w-full flex items-center justify-between py-3 text-lg text-white"
+                    onClick={() => setMobileAccordion(mobileAccordion === idx ? null : idx)}
+                    className="w-full flex items-center gap-3 py-3 text-lg text-white"
                   >
-                    {item.label}
+                    <SvgIcon name={`m_${menu.id}`} className="size-5 text-white shrink-0" />
+                    <span>{menu.label}</span>
                     <svg
-                      className={`w-5 h-5 transition-transform duration-200 ${
-                        mobileAccordion === idx ? "rotate-180" : ""
-                      }`}
+                      className={`w-5 h-5 ml-auto transition-transform duration-200 ${mobileAccordion === idx ? "rotate-180" : ""}`}
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -240,16 +460,8 @@ export default function Navbar() {
                         transition={{ duration: 0.2 }}
                         className="overflow-hidden"
                       >
-                        <div className="pl-4 pb-3 space-y-1">
-                          {item.children.map((child) => (
-                            <a
-                              key={child.label}
-                              href={child.href}
-                              className="block py-2 text-sm text-[#848895] hover:text-white"
-                            >
-                              {child.label}
-                            </a>
-                          ))}
+                        <div className="pb-4">
+                          <PanelContent menu={menu} />
                         </div>
                       </motion.div>
                     )}
