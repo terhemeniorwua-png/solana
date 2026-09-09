@@ -1,117 +1,148 @@
 "use client";
-import { useCarousel } from "@/app/hooks/useCarousel";
+import Image from "next/image";
+import { useState } from "react";
 
 const VIDEOS = [
   {
-    title: "Anatomy of a high-throughput network",
-    duration: "12:45",
-    description: "Inside the architecture that powers millions of transactions per second.",
+    title: "Solana Stories: We Bought A Bank",
+    thumbnail: "https://i.ytimg.com/vi/qMspBj3xwqA/maxresdefault.jpg",
   },
   {
-    title: "Building your first dApp from scratch",
-    duration: "18:20",
-    description: "A step-by-step walkthrough from smart contract to live deployment.",
+    title: "Solana Stories: Crypto Never Sleeps",
+    thumbnail: "https://i.ytimg.com/vi/JNLbpT5qgww/maxresdefault.jpg",
   },
   {
-    title: "Scaling challenges we solved",
-    duration: "14:02",
-    description: "The engineering story behind the latest protocol upgrades.",
+    title: "Solana Stories: The Agents Are Here",
+    thumbnail: "https://i.ytimg.com/vi/Jh_TXAnVMkM/maxresdefault.jpg",
   },
   {
-    title: "Inside the validator ecosystem",
-    duration: "09:38",
-    description: "How independent operators keep the network secure and decentralized.",
+    title: "Solana Stories: The First Touchpoint",
+    thumbnail: "https://i.ytimg.com/vi/CqpCD7Dj2Sk/maxresdefault.jpg",
   },
   {
-    title: "The future of payments on-chain",
-    duration: "16:11",
-    description: "From tokenized deposits to real-time cross-border settlement.",
+    title: "Solana Stories: The Founder",
+    thumbnail: "https://i.ytimg.com/vi/LfbCzbLp6pQ/maxresdefault.jpg",
   },
 ];
 
-const Arrow = ({ className }) => (
-  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+const PrevArrow = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor" className="w-6 h-6">
+    <path d="M14.29 6.29 8.59 12l5.7 5.71 1.42-1.42-4.3-4.29 4.3-4.29z" />
   </svg>
 );
 
-const ArrowLeft = ({ className }) => (
-  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.75 19.5L8.25 12l7.5-7.5" />
+const NextArrow = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor" className="w-6 h-6">
+    <path d="m9.71 17.71 5.7-5.71-5.7-5.71-1.42 1.42 4.3 4.29-4.3 4.29z" />
+  </svg>
+);
+
+const PlayIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="white" className="w-8 h-8 max-md:!w-4 max-md:!h-4 md:!w-5 md:!h-5 xl:!w-6 xl:!h-6">
+    <path d="M6.51 18.87a1.002 1.002 0 0 0 1-.01l10-6c.3-.18.49-.51.49-.86s-.18-.68-.49-.86l-10-6a.99.99 0 0 0-1.01-.01c-.31.18-.51.51-.51.87v12c0 .36.19.69.51.87ZM8 7.77 15.06 12 8 16.23z" />
   </svg>
 );
 
 export default function VideoStories() {
-  const { containerRef, canScrollLeft, canScrollRight, scroll } = useCarousel();
+  const [index, setIndex] = useState(0);
+  const len = VIDEOS.length;
+  const go = (dir) =>
+    setIndex((i) => Math.min(len - 1, Math.max(0, i + dir)));
 
   return (
-    <section className="py-20 bg-[#0a0a0a] border-y border-white/[0.08]">
-      <div className="mx-auto max-w-[1400px] px-6">
-        <div className="mb-12">
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mb-3">
-            How we built this
-          </h2>
-          <p className="text-[#A0A0A0] max-w-xl">
-            Stories, deep dives, and behind-the-scenes from the engineers and
-            operators building the network.
-          </p>
-        </div>
-
-        <div className="relative">
-          {canScrollLeft && (
-            <button
-              onClick={() => scroll("left")}
-              className="hidden md:flex absolute -left-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-[#0a0a0a] border border-white/[0.08] items-center justify-center hover:bg-white/[0.06] transition-colors"
-            >
-              <ArrowLeft className="w-5 h-5" />
-            </button>
-          )}
-          {canScrollRight && (
-            <button
-              onClick={() => scroll("right")}
-              className="hidden md:flex absolute -right-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-[#0a0a0a] border border-white/[0.08] items-center justify-center hover:bg-white/[0.06] transition-colors"
-            >
-              <Arrow className="w-5 h-5" />
-            </button>
-          )}
-
-          <div
-            ref={containerRef}
-            className="flex gap-6 overflow-x-auto hide-scrollbar scroll-smooth snap-x snap-mandatory pb-4"
-          >
-            {VIDEOS.map((video) => (
-              <div
-                key={video.title}
-                className="shrink-0 w-[400px] snap-start group"
-              >
-                {/* 16:9 thumbnail with play button */}
-                <div className="aspect-video rounded-2xl overflow-hidden bg-gradient-to-br from-[#9945FF]/25 via-[#0a0a0a] to-[#14F195]/20 relative border border-white/[0.08] group-hover:border-white/[0.15] transition-colors">
-                  {/* TODO: Replace with actual video thumbnail image */}
-                  <div className="absolute inset-0 noise-bg" />
-                  {/* Play button */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-16 h-16 rounded-full bg-black/60 backdrop-blur border border-white/20 flex items-center justify-center group-hover:bg-black/40 group-hover:scale-105 transition-all duration-300">
-                      <svg className="w-6 h-6 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M8 5v14l11-7z" />
-                      </svg>
-                    </div>
-                  </div>
-                  {/* Duration badge */}
-                  <div className="absolute bottom-3 right-3 px-2 py-0.5 rounded bg-black/70 text-xs font-mono text-[#F5F5F5]">
-                    {video.duration}
-                  </div>
+    <div>
+      <div className="w-full">
+        <hr className="border-nd-border-light border-t m-0 !opacity-100" />
+      </div>
+      <section className="relative overflow-hidden text-white text-left">
+        <div className="py-10">
+          <div className="max-w-screen-2xl w-full mx-auto px-5 md:px-8 xl:px-10 mb-8 xl:mb-12 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+            <div className="max-w-xl">
+              <h2 className="nd-heading-l">How we built this</h2>
+              <p className="text-nd-mid-em-text nd-body-xl max-xl:mt-3 xl:mt-5">
+                Hear from pioneers creating the future of global{" "}
+                <br className="max-xl:hidden" />
+                financial markets.
+              </p>
+            </div>
+            <div className="flex gap-3 items-center">
+              <div className="hidden xl:inline-flex">
+                <div className="flex gap-2">
+                  <button
+                    aria-label="Previous"
+                    onClick={() => go(-1)}
+                    className="rounded-full w-12 h-12 p-1 border-[1px] border-nd-border-prominent transition flex items-center justify-center not-hover:bg-black hover:bg-nd-border-prominent"
+                  >
+                    <PrevArrow />
+                  </button>
+                  <button
+                    aria-label="Next"
+                    onClick={() => go(1)}
+                    className="rounded-full w-12 h-12 p-1 border-[1px] border-nd-border-prominent transition flex items-center justify-center not-hover:bg-black hover:bg-nd-border-prominent"
+                  >
+                    <NextArrow />
+                  </button>
                 </div>
-                <h3 className="mt-4 text-lg font-semibold text-[#F5F5F5] group-hover:text-white transition-colors">
-                  {video.title}
-                </h3>
-                <p className="mt-1 text-sm text-[#A0A0A0] line-clamp-1">
-                  {video.description}
-                </p>
               </div>
-            ))}
+            </div>
+          </div>
+
+          <div className="max-w-screen-2xl w-full mx-auto px-5 md:px-8 xl:px-10">
+            <div className="relative w-full flex items-center justify-center !m-0 [&>div]:!overflow-visible [&>div]:!p-0 w-full md:w-[700px] xl:w-[800px]">
+              <div className="w-full overflow-hidden z-0 px-14">
+                <div
+                  className="flex"
+                  style={{
+                    width: `${len * 100}%`,
+                    display: "flex",
+                    transition: "transform 0.5s cubic-bezier(0.4,0,0.2,1)",
+                    transform: `translateX(calc(-${((index / len) * 100).toFixed(3)}% + 0px))`,
+                    cursor: "grab",
+                  }}
+                >
+                  {VIDEOS.map((video) => (
+                    <div
+                      key={video.title}
+                      style={{
+                        width: `${(100 / len).toFixed(3)}%`,
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "flex-start",
+                        flexShrink: 0,
+                      }}
+                    >
+                      <div style={{ width: "100%" }}>
+                        <div className="flex flex-col w-full self-start min-w-0 px-1">
+                          <div className="relative w-full aspect-video rounded-xl overflow-hidden cursor-pointer group">
+                            <Image
+                              src={video.thumbnail}
+                              alt={video.title}
+                              fill
+                              sizes="(max-width: 768px) 120vw, 80vw"
+                              className="object-cover z-0"
+                            />
+                            <button
+                              type="button"
+                              aria-label={video.title}
+                              tabIndex="0"
+                              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 max-md:w-10 max-md:h-10 md:w-12 md:h-12 xl:w-[72px] xl:h-[72px] left-5 top-auto bottom-5 !translate-x-0 !translate-y-0 backdrop-blur-xs !bg-black/70 shadow-[0_2px_4px_1px_rgba(0,0,0,0.17),0_-4px_12px_0_rgba(255,255,255,0.29)_inset,0_1px_0_0_rgba(255,255,255,0.40)_inset,0_-1px_0_0_rgba(255,255,255,0.20)_inset] rounded-full flex items-center justify-center transition group-hover:scale-110 z-10"
+                            >
+                              <PlayIcon />
+                            </button>
+                          </div>
+                          <h3 className="nd-heading-m max-xl:mt-5 xl:mt-7">
+                            {video.title}
+                          </h3>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
   );
 }

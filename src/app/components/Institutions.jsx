@@ -1,83 +1,162 @@
 "use client";
+import Image from "next/image";
 
 const INSTITUTIONS = [
-  { name: "Meridian Capital", stat: "$12B", label: "Assets under management" },
-  { name: "Aurora Bank", stat: "28", label: "Institutional products" },
-  { name: "Vertex Fund", stat: "$4.5B", label: "Tokenized holdings" },
-  { name: "Cobalt Trust", stat: "150K", label: "Active institutional wallets" },
-  { name: "Onyx Exchange", stat: "99.99%", label: "Uptime guarantee" },
-  { name: "Glacier Custody", stat: "38", label: "Countries served" },
+  {
+    name: "Western Union",
+    logo: "/img/logos-eco/western-union.svg",
+    value: "USDPT",
+    label: "Stablecoin launching 2026",
+    border: "max-md:border-r-0 max-xl:border-r xl:border-r",
+  },
+  {
+    name: "Visa",
+    logo: "/img/logos-eco/visa.svg",
+    value: "Millions",
+    label: "Settled in USDC",
+    border: "xl:border-r max-md:border-t",
+  },
+  {
+    name: "Paypal",
+    logo: "/img/logos-eco/paypal.svg",
+    value: "PYUSD",
+    label: "Stablecoin issued",
+    border: "max-md:border-r-0 max-xl:border-r xl:border-r max-xl:border-t max-md:border-t",
+  },
+  {
+    name: "Franklin Templeton",
+    logo: "/img/logos-eco/franklin-templeton.webp",
+    value: "64%",
+    label: "Monthly Onchain Asset Growth",
+    border: "max-xl:border-t max-md:border-t",
+  },
+  {
+    name: "r3",
+    logo: "/img/logos-eco/r3.webp",
+    value: "10B",
+    label: "in Regulated Onchain Assets",
+    border: "max-md:border-r-0 max-xl:border-r xl:border-r max-xl:border-t max-md:border-t xl:border-t",
+  },
+  {
+    name: "Bullish",
+    logo: "/img/logos-eco/bullish.svg",
+    value: "2.5B",
+    label: "Daily Volume",
+    border: "xl:border-r max-xl:border-t max-md:border-t xl:border-t",
+  },
 ];
 
-const SECONDARY_LOGOS = ["Pinnacle", "Braid", "Halo", "Drift", "Northrow"];
+const TRUST_LOGOS = [
+  { name: "Hamilton Lane", src: "/img/logos-eco/hamilton-lane.webp", h: undefined },
+  { name: "Blackrock", src: "/img/logos-eco/blackrock.png", h: "80%" },
+  { name: "Brevan Howard", src: "/img/logos-eco/brevan-howard.png", h: "80%" },
+  { name: "Societe Generale", src: "/img/logos-eco/societe-generale.png", h: "96%" },
+  { name: "Vaneck", src: "/img/logos-eco/vaneck.png", h: "80%" },
+];
 
 export default function Institutions() {
   return (
-    <section className="relative py-24 overflow-hidden bg-[#0a0a0a] border-t border-white/[0.08]">
-      {/* Ambient blurred blobs */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] rounded-full bg-[#9945FF]/10 blur-[100px]" />
-        <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] rounded-full bg-[#14F195]/8 blur-[100px]" />
-        <div className="absolute top-1/2 left-3/4 w-[400px] h-[400px] rounded-full bg-[#9945FF]/5 blur-[100px]" />
-        {/* TODO: Replace with actual licensed asset images */}
+    <div>
+      <div className="w-full">
+        <hr className="border-nd-border-light border-t m-0 !opacity-100" />
       </div>
-
-      <div className="relative z-10 mx-auto max-w-[1400px] px-6">
-        <div className="flex items-end justify-between mb-16">
-          <div>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4">
-              Built for institutions
-            </h2>
-            <p className="text-[#A0A0A0] max-w-xl">
-              From custody to trading, enterprises rely on the network for
-              speed, security, and scale.
-            </p>
+      <section className="relative overflow-hidden text-nd-high-em-text text-left m-0 z-10">
+        <div className="max-w-screen-2xl w-full mx-auto px-5 md:px-8 xl:px-10 py-10 flex flex-col justify-between relative">
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+            <div className="xl:max-w-[70%] grow-0">
+              <h2 className="nd-heading-l">
+                The world&rsquo;s largest institutions{" "}
+                <br className="max-md:hidden" />
+                <span className="font-light">
+                  and fintechs are building on Solana.
+                </span>
+              </h2>
+            </div>
+            <div>
+              <a
+                className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 dark:ring-offset-zinc-950 dark:focus-visible:ring-zinc-300 rounded-full border-[1px] border-nd-border-prominent not-hover:bg-transparent hover:bg-nd-border-prominent px-6 h-12 w-auto nd-body-m text-inherit"
+                href="/solutions/tokenization"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                View all
+              </a>
+            </div>
           </div>
-          <a
-            href="#"
-            className="hidden sm:flex items-center gap-1 text-sm text-[#A0A0A0] hover:text-[#F5F5F5] transition-colors"
-          >
-            View all
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-            </svg>
-          </a>
-        </div>
 
-        {/* Institution cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
-          {INSTITUTIONS.map((inst) => (
-            <div
-              key={inst.name}
-              className="p-8 rounded-2xl border border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/[0.12] hover:-translate-y-1 transition-all duration-300"
-            >
-              {/* Logo placeholder */}
-              <div className="flex items-center gap-2 mb-8">
-                {/* TODO: Replace with actual logo */}
-                <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center">
-                  <div className="w-4 h-4 rounded bg-white/20" />
+          <div className="mt-10 xl:mt-16 rounded-2xl border-nd-border-light border-[1px] bg-nd-inverse overflow-hidden relative">
+            <Image
+              alt=""
+              fill
+              sizes="100vw"
+              src="/img/index/projects-bg.webp"
+              className="opacity-30 blur-[40px]"
+            />
+            <Image
+              alt=""
+              width={1411}
+              height={283}
+              src="/img/index/pattern-parallelogram-r.svg"
+              className="absolute bottom-[-23px] right-[-900px] mix-blend-overlay opacity-40 max-w-none hidden xl:block"
+            />
+            <Image
+              alt=""
+              width={1411}
+              height={283}
+              src="/img/index/pattern-parallelogram-r.svg"
+              className="absolute bottom-[-100px] right-[-1000px] mix-blend-overlay max-w-none hidden xl:block"
+            />
+            <div className="relative grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4">
+              {INSTITUTIONS.map((inst) => (
+                <article
+                  key={inst.name}
+                  className={`relative group shrink-0 p-[24px_20px] xl:p-8 flex flex-col justify-between xl:min-h-[360px] border-nd-border-light ${inst.border}`}
+                  aria-label={inst.name}
+                >
+                  <div className="relative">
+                    <div className="relative h-6 xl:h-8">
+                      <Image
+                        src={inst.logo}
+                        alt={inst.name}
+                        fill
+                        sizes="(max-width: 1280px) 50vw, 25vw"
+                        className="object-contain w-auto"
+                      />
+                    </div>
+                  </div>
+                  <div className="mt-8 mb-0 relative">
+                    <div className="sr-only">{inst.label}</div>
+                    <div className="text-[24px] xl:text-[40px] leading-[1.33] xl:leading-[1.2] mb-1 uppercase">
+                      {inst.value}
+                    </div>
+                    <div className="nd-body-m font-medium">{inst.label}</div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+
+          <div className="relative w-full">
+            <div className="flex whitespace-nowrap items-center scrollbar-hidden overflow-auto transform-gpu mt-10 xl:mt-16 -mx-5 md:-mx-8 xl:-mx-10 w-auto px-5 md:px-8 xl:px-10 h-[28px] xl:h-[40px] gap-6 xl:gap-12 justify-start md:justify-between">
+              {TRUST_LOGOS.map((logo) => (
+                <div
+                  key={logo.name}
+                  className="flex items-center justify-center relative md:mr-12 xl:mr-32 self-center h-full m-0"
+                  style={logo.h ? { height: logo.h } : undefined}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={logo.src}
+                    alt={logo.name}
+                    loading="lazy"
+                    className="block h-full max-h-full max-w-none !w-auto"
+                  />
                 </div>
-                <span className="font-semibold text-[#F5F5F5]">{inst.name}</span>
-              </div>
-              <div className="text-4xl font-bold tracking-tight gradient-text font-mono">
-                {inst.stat}
-              </div>
-              <div className="mt-2 text-sm text-[#A0A0A0]">{inst.label}</div>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
-
-        {/* Secondary logo row */}
-        <div className="flex items-center justify-between gap-8 flex-wrap opacity-40">
-          {SECONDARY_LOGOS.map((name) => (
-            <div key={name} className="flex items-center gap-2 h-8">
-              {/* TODO: Replace with real logo */}
-              <div className="w-4 h-4 rounded bg-white/25" />
-              <span className="text-gray-400 font-medium">{name}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
+      </section>
+    </div>
   );
 }

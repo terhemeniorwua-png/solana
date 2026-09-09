@@ -1,123 +1,186 @@
 "use client";
-import { motion } from "framer-motion";
-import { useCarousel } from "@/app/hooks/useCarousel";
+import Image from "next/image";
+import { useState } from "react";
 
 const EVENTS = [
   {
-    name: "Global Developer Conference",
-    date: "Oct 14–16, 2026",
-    city: "Barcelona, Spain",
+    name: "Solana AI & Capital Forum",
+    date: "Mon, Sep 28",
+    city: "Woodside",
+    href: "https://lu.ma/solana-capital-forum",
+    image: "/img/events/capital-forum.webp",
   },
   {
-    name: "DeFi Summit Europe",
-    date: "Nov 3–5, 2026",
-    city: "London, UK",
-  },
-  {
-    name: "Web3 Builders Hackathon",
-    date: "Nov 22–24, 2026",
+    name: "Solana Capital Forum Singapore",
+    date: "Tue, Oct 6",
     city: "Singapore",
+    href: "https://lu.ma/sol-cap-sg",
+    image: "/img/events/capital-forum-sg.webp",
   },
   {
-    name: "Token Economy Workshop",
-    date: "Dec 8–9, 2026",
-    city: "Zurich, Switzerland",
+    name: "Solana Hacker House - London",
+    date: "Sun, Nov 1",
+    city: "London",
+    href: "https://lu.ma/london-hh-26",
+    image: "/img/events/hacker-house.webp",
   },
   {
-    name: "Institutional Digital Assets Forum",
-    date: "Jan 15–16, 2027",
-    city: "New York, USA",
+    name: "Scale or Die",
+    date: "Sat, Nov 14",
+    city: "London",
+    href: "https://lu.ma/scale-or-die-26",
+    image: "/img/events/scale-or-die.webp",
   },
   {
-    name: "Asian Blockchain Meetup",
-    date: "Feb 4–5, 2027",
-    city: "Tokyo, Japan",
+    name: "Solana Breakpoint 2026",
+    date: "Sun, Nov 15",
+    city: "London",
+    href: "https://lu.ma/breakpoint2026",
+    image: "/img/events/breakpoint-2026.webp",
+  },
+  {
+    name: "Pr1me [London Series] - Exclusive Dinner for Web3 Finance",
+    date: "Mon, Nov 16",
+    city: "London",
+    href: "https://lu.ma/aqntywn2",
+    image: "/img/events/pr1me-dinner.webp",
   },
 ];
 
-const Arrow = ({ className }) => (
-  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+const PrevArrow = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor" className="w-6 h-6">
+    <path d="M14.29 6.29 8.59 12l5.7 5.71 1.42-1.42-4.3-4.29 4.3-4.29z" />
   </svg>
 );
 
-const ArrowLeft = ({ className }) => (
-  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.75 19.5L8.25 12l7.5-7.5" />
+const NextArrow = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor" className="w-6 h-6">
+    <path d="m9.71 17.71 5.7-5.71-5.7-5.71-1.42 1.42 4.3 4.29-4.3 4.29z" />
+  </svg>
+);
+
+const CalendarIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+    <path d="m19,4h-2v-2h-2v2h-6v-2h-2v2h-2c-1.1,0-2,.9-2,2v14c0,1.1.9,2,2,2h14c1.1,0,2-.9,2-2V6c0-1.1-.9-2-2-2ZM5,20v-12h14v-2,14s-14,0-14,0Z" />
+    <path d="M12 13H17V18H12z" />
+  </svg>
+);
+
+const BoltIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+    <path d="m2.6 10.42 7.64 3.34 3.34 7.64c.16.37.52.6.92.6h.05a1 1 0 0 0 .9-.69l5.5-17c.12-.36.02-.75-.24-1.01a.98.98 0 0 0-1.01-.24L2.69 8.55c-.4.13-.67.49-.69.9-.02.42.22.8.6.97m15.85-4.86-4.09 12.63-2.44-5.59c-.1-.23-.28-.41-.52-.52L5.81 9.64l12.63-4.09Z" />
   </svg>
 );
 
 export default function EventsCarousel() {
-  const { containerRef, canScrollLeft, canScrollRight, scroll } = useCarousel();
+  const [index, setIndex] = useState(0);
+  const len = EVENTS.length;
+
+  const go = (dir) =>
+    setIndex((i) => Math.min(len - 1, Math.max(0, i + dir)));
 
   return (
-    <section className="py-20">
-      <div className="mx-auto max-w-[1400px] px-6">
-        <div className="flex items-center justify-between mb-10">
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">
-            Upcoming Events
-          </h2>
-          <a
-            href="#"
-            className="text-sm text-[#A0A0A0] hover:text-[#F5F5F5] transition-colors flex items-center gap-1"
-          >
-            View all
-            <Arrow className="w-4 h-4" />
-          </a>
+    <section className="relative overflow-hidden text-white text-left">
+      <div className="py-10">
+        <div className="max-w-screen-2xl w-full mx-auto px-5 md:px-8 xl:px-10 mb-8 xl:mb-12 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+          <div className="max-w-xl">
+            <h2 className="nd-heading-l">
+              Meet Solana IRL. <br />
+              <span className="font-light">Build connections.</span>
+            </h2>
+          </div>
+          <div className="flex gap-3 items-center">
+            <a
+              className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 dark:ring-offset-zinc-950 dark:focus-visible:ring-zinc-300 rounded-full border-[1px] border-nd-border-prominent not-hover:bg-transparent hover:bg-nd-border-prominent px-6 h-12 w-auto nd-body-m text-inherit"
+              href="/events"
+              rel="noopener noreferrer"
+            >
+              View all
+            </a>
+            <div className="hidden xl:inline-flex">
+              <div className="flex gap-2">
+                <button
+                  aria-label="Previous"
+                  onClick={() => go(-1)}
+                  disabled={index === 0}
+                  className="rounded-full w-12 h-12 p-1 border-[1px] border-nd-border-prominent transition flex items-center justify-center not-hover:bg-black hover:bg-nd-border-prominent disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <PrevArrow />
+                </button>
+                <button
+                  aria-label="Next"
+                  onClick={() => go(1)}
+                  disabled={index === len - 1}
+                  className="rounded-full w-12 h-12 p-1 border-[1px] border-nd-border-prominent transition flex items-center justify-center not-hover:bg-black hover:bg-nd-border-prominent disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <NextArrow />
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div className="relative">
-          {/* Scroll buttons */}
-          {canScrollLeft && (
-            <motion.button
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              onClick={() => scroll("left")}
-              className="hidden md:flex absolute -left-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-[#0a0a0a] border border-white/[0.08] items-center justify-center hover:bg-white/[0.06] transition-colors"
-            >
-              <ArrowLeft className="w-5 h-5" />
-            </motion.button>
-          )}
-          {canScrollRight && (
-            <motion.button
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              onClick={() => scroll("right")}
-              className="hidden md:flex absolute -right-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-[#0a0a0a] border border-white/[0.08] items-center justify-center hover:bg-white/[0.06] transition-colors"
-            >
-              <Arrow className="w-5 h-5" />
-            </motion.button>
-          )}
-
-          <div
-            ref={containerRef}
-            className="flex gap-6 overflow-x-auto hide-scrollbar scroll-smooth snap-x snap-mandatory pb-4 cursor-grab active:cursor-grabbing"
-          >
-            {EVENTS.map((event, idx) => (
-              <motion.a
-                key={event.name}
-                href="#"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.5, delay: idx * 0.05 }}
-                className="shrink-0 w-[320px] snap-start p-6 rounded-2xl border border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/[0.12] transition-colors group"
+        <div className="max-w-screen-2xl w-full mx-auto px-5 md:px-8 xl:px-10">
+          <div className="relative w-full flex items-center justify-center !m-0 [&>div]:!overflow-visible [&>div]:!p-0 w-full md:w-[356px] xl:w-[456px]">
+            <div className="w-full overflow-hidden z-0 px-14">
+              <div
+                className="flex"
+                style={{
+                  width: `${len * 100}%`,
+                  display: "flex",
+                  transition: "transform 0.5s cubic-bezier(0.4,0,0.2,1)",
+                  transform: `translateX(calc(-${((index / len) * 100).toFixed(3)}% + 0px))`,
+                  cursor: "grab",
+                }}
               >
-                <div className="text-xs font-medium text-[#A0A0A0] font-mono mb-3">
-                  {event.date}
-                </div>
-                <h3 className="text-lg font-semibold text-[#F5F5F5] group-hover:text-white mb-2 transition-colors">
-                  {event.name}
-                </h3>
-                <div className="flex items-center gap-1.5 text-sm text-[#A0A0A0]">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
-                  </svg>
-                  {event.city}
-                </div>
-              </motion.a>
-            ))}
+                {EVENTS.map((event) => (
+                  <div
+                    key={event.name}
+                    style={{
+                      width: `${(100 / len).toFixed(3)}%`,
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "flex-start",
+                      flexShrink: 0,
+                    }}
+                  >
+                    <div style={{ width: "100%" }}>
+                      <a
+                        className="flex flex-col w-full self-start min-w-0 text-inherit px-1"
+                        href={event.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <div className="relative w-full aspect-square rounded-xl overflow-hidden group">
+                          <Image
+                            src={event.image}
+                            alt={event.name}
+                            fill
+                            sizes="(max-width: 768px) 100vw, 50vw"
+                            className="object-cover z-0"
+                          />
+                        </div>
+                        <h3 className="nd-heading-s mt-6">{event.name}</h3>
+                        <div className="mt-2 flex gap-1 flex-wrap">
+                          <div className="h-[28px] md:h-[32px] px-1.5 py-1 text-nd-primary bg-nd-border-light rounded-sm font-medium nd-body-s inline-flex items-center flex-row !leading-[17px] md:!leading-[21px]">
+                            <CalendarIcon />
+                            <span className="px-1.5 inline-block align-middle pt-0.5">
+                              {event.date}
+                            </span>
+                          </div>
+                          <div className="h-[28px] md:h-[32px] px-1.5 py-1 text-nd-primary bg-nd-border-light rounded-sm font-medium nd-body-s inline-flex items-center flex-row !leading-[17px] md:!leading-[21px]">
+                            <BoltIcon />
+                            <span className="px-1.5 inline-block align-middle pt-0.5">
+                              {event.city}
+                            </span>
+                          </div>
+                        </div>
+                      </a>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>

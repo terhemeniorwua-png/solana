@@ -1,169 +1,302 @@
 "use client";
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useCarousel } from "@/app/hooks/useCarousel";
+import Image from "next/image";
+import { useState, useSyncExternalStore } from "react";
+import { motion } from "framer-motion";
 
-const FILTERS = ["All", "DeFi", "Institutions", "Consumer", "Developers", "Ecosystem"];
+const mobileQuery = () =>
+  typeof window === "undefined"
+    ? false
+    : window.matchMedia("(max-width: 1279px)").matches;
+
+const subscribeMobile = (callback) => {
+  if (typeof window === "undefined") return () => {};
+  const mq = window.matchMedia("(max-width: 1279px)");
+  mq.addEventListener("change", callback);
+  return () => mq.removeEventListener("change", callback);
+};
+
+const CATEGORIES = [
+  { label: "All", color: null },
+  { label: "DeFi", color: "text-nd-highlight-lavendar", fill: "#ca9ff5" },
+  { label: "Institutions", color: "text-nd-highlight-green", fill: "#55e9ab" },
+  { label: "Consumer", color: "text-nd-highlight-lime", fill: "#cff15e" },
+  { label: "Developers", color: "text-nd-highlight-orange", fill: "#f48252" },
+  { label: "Ecosystem", color: "text-nd-highlight-gold", fill: "#ffc526" },
+];
 
 const NEWS = [
   {
-    title: "Protocol Upgrade Accelerates Settlement Times",
-    excerpt: "The latest network upgrade reduces average block time to a fraction of a second, unlocking new classes of high-frequency applications.",
-    tag: "Developers",
+    slug: "report-stablecoins-are-reshaping-remittances",
+    title: "Report: Stablecoins Are Reshaping Remittances",
     date: "Sep 2, 2026",
-    readTime: "6 min",
+    cat: "Institutions",
   },
   {
-    title: "Institutional Adoption Reaches New Milestone",
-    excerpt: "A growing number of asset managers are building custody and trading infrastructure on the network's fast, low-cost rails.",
-    tag: "Institutions",
+    slug: "bits-to-bricks-bitrobot-jonathan-victor",
+    title: "How BitRobot Crowdsources Real-World Data for Embodied AI",
+    date: "Sep 1, 2026",
+    cat: "Ecosystem",
+  },
+  {
+    slug: "webinar-recap-cross-border-payments-in-latin-america",
+    title: "Webinar Recap: Cross-Border Payments in Latin America",
+    date: "Sep 1, 2026",
+    cat: "Consumer",
+  },
+  {
+    slug: "the-token-supercycle-oped",
+    title: "The Token Supercycle: Everything of Value is Becoming Programmable",
+    date: "Aug 31, 2026",
+    cat: "Institutions",
+  },
+  {
+    slug: "solana-ecosystem-roundup-august-2026",
+    title: "Solana Ecosystem Roundup: August 2026",
+    date: "Aug 31, 2026",
+    cat: "Ecosystem",
+  },
+  {
+    slug: "payment-channels-1-million-payments-per-second",
+    title: "Payment Channels: 1 Million Payments Per Second",
+    date: "Aug 30, 2026",
+    cat: "Developers",
+  },
+  {
+    slug: "how-to-reclaim-excess-sol-after-rent-reduction",
+    title: "How to Reclaim Excess SOL After Rent Reduction",
+    date: "Aug 29, 2026",
+    cat: "Developers",
+  },
+  {
+    slug: "solana-changelog-august-27-2026",
+    title: "Solana Changelog: August 27, 2026",
     date: "Aug 28, 2026",
-    readTime: "4 min",
+    cat: "Developers",
   },
   {
-    title: "Consumer Payments See Record Throughput",
-    excerpt: "Point-of-sale integrations now process over a million micro-payments daily, driving mainstream merchant adoption.",
-    tag: "Consumer",
-    date: "Aug 22, 2026",
-    readTime: "5 min",
+    slug: "breakpoint-2026-london-speakers",
+    title: "The Token Supercycle Is Here: Breakpoint 2026 to London",
+    date: "Aug 27, 2026",
+    cat: "Ecosystem",
   },
   {
-    title: "Leading Exchange Lists Native Token",
-    excerpt: "The token becomes available on major spot exchanges, deepening liquidity and broadening global access.",
-    tag: "DeFi",
-    date: "Aug 18, 2026",
-    readTime: "3 min",
-  },
-  {
-    title: "New Ecosystem Fund Backs 40 Startups",
-    excerpt: "Grants and venture funding flow to teams building infrastructure, tooling, and consumer applications across the ecosystem.",
-    tag: "Ecosystem",
-    date: "Aug 10, 2026",
-    readTime: "7 min",
-  },
-  {
-    title: "Developer Tooling Receives Major Refresh",
-    excerpt: "The CLI, IDEs, and debugger tooling get a ground-up rewrite to make building and shipping applications faster than ever.",
-    tag: "Developers",
-    date: "Aug 2, 2026",
-    readTime: "5 min",
+    slug: "solana-changelog-august-20-2026",
+    title: "Solana Changelog: August 20, 2026",
+    date: "Aug 24, 2026",
+    cat: "Developers",
   },
 ];
 
-const Arrow = ({ className }) => (
-  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+const TerminalIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" viewBox="0 0 12 12" className="w-3 h-3 -mt-0.5 mr-[7px]">
+    <path fill="currentColor" d="m11.937 8.673-1.98 2.177a.46.46 0 0 1-.336.15H.23a.23.23 0 0 1-.127-.039.242.242 0 0 1-.043-.358l1.98-2.177a.46.46 0 0 1 .334-.15h9.391a.23.23 0 0 1 .128.037.23.23 0 0 1 .103.238.24.24 0 0 1-.06.122m-1.98-4.385a.46.46 0 0 0-.336-.15H.23a.23.23 0 0 0-.127.038.241.241 0 0 0-.043.358l1.98 2.178a.46.46 0 0 0 .334.15h9.391a.23.23 0 0 0 .126-.039.241.241 0 0 0 .042-.357zM.23 2.724h9.39a.45.45 0 0 0 .336-.15L11.937.397a.24.24 0 0 0 .061-.19.24.24 0 0 0-.104-.17.23.23 0 0 0-.128-.037h-9.39a.45.45 0 0 0-.336.15L.061 2.327a.24.24 0 0 0-.042.255.24.24 0 0 0 .085.103.23.23 0 0 0 .126.039" />
   </svg>
 );
 
-const ArrowLeft = ({ className }) => (
-  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.75 19.5L8.25 12l7.5-7.5" />
-  </svg>
-);
+const CATEGORY_ICONS = {
+  All: [
+    "m20,3H4c-1.1,0-2,.9-2,2v14c0,1.1.9,2,2,2h16c1.1,0,2-.9,2-2V5c0-1.1-.9-2-2-2ZM4,19V5h16v14s-16,0-16,0Z",
+    "M13 8H18V10H13z",
+    "M8 8.59 6.96 7.54 5.54 8.96 8 11.41 11.46 7.96 10.04 6.54 8 8.59z",
+    "M13 14H18V16H13z",
+    "M8 14.59 6.96 13.54 5.54 14.96 8 17.41 11.46 13.96 10.04 12.54 8 14.59z",
+  ],
+  DeFi: ["M13 8h2v12h-2zM9 4h2v16H9zM17 14h2v6h-2zM5 11h2v9H5z"],
+  Institutions: [
+    "m19.94 7.68-.03-.09a.8.8 0 0 0-.2-.29l-5-5c-.09-.09-.19-.15-.29-.2l-.09-.03a.8.8 0 0 0-.26-.05c-.02 0-.04-.01-.06-.01H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-12s-.01-.04-.01-.06c0-.09-.02-.17-.05-.26ZM6 20V4h7v4c0 .55.45 1 1 1h4v11z",
+    "M8 11h8v2H8zM8 15h8v2H8zM8 7h3v2H8z",
+  ],
+  Consumer: [
+    "M10.5 5 11.5 4.33 12.5 5 12.17 3.83 13 3.12 12 3 11.5 2 11 3 10 3.12 10.83 3.83 10.5 5z",
+    "M20.33 13.67 19.5 12 18.67 13.67 17 13.88 18.39 15.06 17.83 17 19.5 15.89 21.17 17 20.61 15.06 22 13.88 20.33 13.67z",
+    "M4.83 9 6.5 7.89 8.17 9 7.61 7.05 9 5.88 7.33 5.67 6.5 4 5.67 5.67 4 5.88 5.39 7.05 4.83 9z",
+    "m18.71,2.29c-.39-.39-1.02-.39-1.41,0L2.29,17.29c-.39.39-.39,1.02,0,1.41l3,3c.2.2.45.29.71.29s.51-.1.71-.29l15-15c.39-.39.39-1.02,0-1.41l-3-3ZM6,19.59l-1.59-1.59,9.09-9.09,1.59,1.59-9.09,9.09Zm10.5-10.5l-1.59-1.59,3.09-3.09,1.59,1.59-3.09,3.09Z",
+  ],
+  Developers: [
+    "m16.71 16.71 4.7-4.71-4.7-4.71-1.42 1.42 3.3 3.29-3.3 3.29zM8.71 15.29 5.41 12l3.3-3.29-1.42-1.42L2.59 12l4.7 4.71zM14 3l-.98-.22-2 9-2 9L10 21l.98.22 2-9 2-9z",
+  ],
+  Ecosystem: [
+    "M19 3c-1.65 0-3 1.35-3 3 0 .5.14.97.35 1.38l-1.12 1.3c-.64-.43-1.41-.69-2.24-.69s-1.53.24-2.15.64l-2.2-1.65c.22-.45.35-.96.35-1.49 0-1.93-1.57-3.5-3.5-3.5s-3.5 1.57-3.5 3.5 1.57 3.5 3.5 3.5c.66 0 1.28-.2 1.81-.52l2.18 1.64c-.3.56-.49 1.2-.49 1.88 0 1 .38 1.9.99 2.6l-1.69 1.69.03.03c-.4-.2-.84-.32-1.32-.32-1.65 0-3 1.35-3 3s1.35 3 3 3 3-1.35 3-3c0-.48-.12-.92-.32-1.32l.03.03 1.95-1.95c.42.15.87.25 1.34.25 2.21 0 4-1.79 4-4 0-.64-.17-1.24-.44-1.78l1.25-1.46c.36.16.76.25 1.19.25 1.65 0 3-1.35 3-3s-1.35-3-3-3ZM7 20c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1M4 5.5C4 4.67 4.67 4 5.5 4S7 4.67 7 5.5 6.33 7 5.5 7 4 6.33 4 5.5m9 8.5c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2m6-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1",
+  ],
+};
 
 export default function NewsCarousel() {
-  const [activeFilter, setActiveFilter] = useState("All");
-  const { containerRef, canScrollLeft, canScrollRight, scroll } = useCarousel();
+  const [active, setActive] = useState("All");
+  const [page, setPage] = useState(0);
+  const isMobile = useSyncExternalStore(subscribeMobile, mobileQuery, () => false);
+  const PAGE_SIZE = 4;
 
-  const filteredNews =
-    activeFilter === "All"
-      ? NEWS
-      : NEWS.filter((n) => n.tag === activeFilter);
+  const setActiveCat = (label) => {
+    if (label === active) return;
+    setActive(label);
+    setPage(0);
+  };
+
+  const filtered =
+    active === "All" ? NEWS : NEWS.filter((n) => n.cat === active);
+  const catColor = (name) => (CATEGORIES.find((c) => c.label === name) || {}).fill;
+  const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const visible = isMobile
+    ? filtered.slice(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE)
+    : filtered;
+
+  const changePage = (dir) =>
+    setPage((p) => Math.min(pageCount - 1, Math.max(0, p + dir)));
 
   return (
-    <section className="py-20">
-      <div className="mx-auto max-w-[1400px] px-6">
-        {/* Eyebrow */}
-        <div className="font-mono text-xs text-[#A0A0A0] uppercase tracking-[0.2em] mb-6">
-          Terminal
-        </div>
-
-        {/* Filter pills */}
-        <div className="flex gap-2 overflow-x-auto hide-scrollbar mb-10">
-          {FILTERS.map((filter) => (
-            <button
-              key={filter}
-              onClick={() => setActiveFilter(filter)}
-              className={`relative px-4 py-2 text-sm rounded-full transition-colors whitespace-nowrap ${
-                activeFilter === filter
-                  ? "text-[#F5F5F5]"
-                  : "text-[#A0A0A0] hover:text-[#F5F5F5]"
-              }`}
-            >
-              {filter}
-              {activeFilter === filter && (
-                <motion.div
-                  layoutId="newsTab"
-                  className="absolute bottom-0 left-3 right-3 h-[2px] gradient-bg rounded-full"
-                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                />
-              )}
-            </button>
-          ))}
-        </div>
-
-        <div className="relative">
-          {canScrollLeft && (
-            <button
-              onClick={() => scroll("left")}
-              className="hidden md:flex absolute -left-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-[#0a0a0a] border border-white/[0.08] items-center justify-center hover:bg-white/[0.06] transition-colors"
-            >
-              <ArrowLeft className="w-5 h-5" />
-            </button>
-          )}
-          {canScrollRight && (
-            <button
-              onClick={() => scroll("right")}
-              className="hidden md:flex absolute -right-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-[#0a0a0a] border border-white/[0.08] items-center justify-center hover:bg-white/[0.06] transition-colors"
-            >
-              <Arrow className="w-5 h-5" />
-            </button>
-          )}
-
-          <div
-            ref={containerRef}
-            className="flex gap-6 overflow-x-auto hide-scrollbar scroll-smooth snap-x snap-mandatory pb-4"
-          >
-            <AnimatePresence mode="popLayout">
-              {filteredNews.map((item) => (
-                <motion.article
-                  key={item.title}
-                  layout
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.3 }}
-                  className="shrink-0 w-[360px] snap-start p-6 rounded-2xl border border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/[0.12] transition-colors group"
+    <div>
+      <div className="w-full">
+        <hr className="border-nd-border-light border-t m-0 !opacity-100" />
+      </div>
+      <section className="relative overflow-hidden bg-nd-inverse text-nd-high-em-text text-left m-0">
+        <div className="py-10">
+          <div className="max-w-screen-2xl w-full mx-auto px-5 md:px-8 xl:px-10 flex flex-col justify-between relative">
+            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+              <div className="xl:max-w-[70%] grow-0">
+                <h2 className="nd-heading-l">
+                  What&rsquo;s happening <br />
+                  <span className="font-light">right now</span>
+                </h2>
+              </div>
+              <div>
+                <a
+                  className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 dark:ring-offset-zinc-950 dark:focus-visible:ring-zinc-300 rounded-full border-[1px] border-nd-border-prominent not-hover:bg-transparent hover:bg-nd-border-prominent px-6 h-12 w-auto nd-body-m text-inherit"
+                  href="/news"
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
-                  <div className="flex items-center gap-3 text-xs text-[#A0A0A0] mb-4">
-                    <span className="font-mono uppercase tracking-wider">
-                      {item.tag}
+                  View all
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div className="border-t border-b border-nd-border-light mt-10 xl:mt-16">
+            <div className="max-w-screen-2xl w-full mx-auto px-5 md:px-8 xl:px-10">
+              <div className="xl:border-l xl:border-r border-nd-border-light -mx-5 md:-mx-8 xl:mx-0 divide-x divide-nd-border-light flex flex-col xl:flex-row">
+                <div className="xl:w-[220px] border-b xl:border-b-0 border-nd-border-light shrink-0 mb-2 xl:mb-0 overflow-hidden relative">
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6 }}
+                    className="h-16 px-6 items-center justify-between flex gap-3 border-b xl:border-b-0 border-nd-border-light mb-2 xl:mb-0"
+                  >
+                    <span className="font-brand-mono text-[14px] leading-[1.14] font-bold uppercase flex items-center">
+                      <TerminalIcon />
+                      TERMINAL
                     </span>
-                    <span className="text-white/[0.15]">·</span>
-                    <span>{item.date}</span>
+                    <div className="flex gap-1">
+                      <div className="terminal-loader animate" />
+                    </div>
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6 }}
+                    className="h-48 p-6 items-end justify-start hidden xl:flex border-t border-nd-border-light"
+                  >
+                    <span className="text-[28px] leading-[1.14] font-medium">
+                      <span className="text-nd-mid-em-text">
+                        Explore<br />
+                      </span>{" "}
+                      Categories
+                    </span>
+                  </motion.div>
+                  <div className="xl:divide-y xl:divide-nd-border-light grid grid-cols-3 xl:grid-cols-1 mr-[-1px] mb-[-1px] xl:mr-0 xl:mb-0 border-t xl:border-t-0 border-nd-border-light">
+                    <div className="hidden xl:block h-0 xl:mb-[-1px]" />
+                    {CATEGORIES.map((cat) => {
+                      const isActive = active === cat.label;
+                      return (
+                        <button
+                          key={cat.label}
+                          onClick={() => setActiveCat(cat.label)}
+                          className={`p-3 xl:px-5 flex flex-col xl:flex-row items-start xl:items-center justify-start gap-2.5 w-full xl:min-h-16 hover:bg-nd-border-light/20 relative border-r border-b border-nd-border-light xl:border-b-0 xl:border-r-0 ${
+                            isActive
+                              ? "!bg-nd-primary !text-nd-inverse xl:before:absolute xl:before:top-1.5 xl:before:left-1.5 xl:before:bottom-1.5 xl:before:w-[3px] xl:before:bg-nd-inverse"
+                              : "text-nd-mid-em-text"
+                          }`}
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor" className={`w-5 h-5 -mt-0.5 ${isActive || !cat.color ? "" : cat.color}`}>
+                            {CATEGORY_ICONS[cat.label].map((d, i) => (
+                              <path key={i} d={d} />
+                            ))}
+                          </svg>
+                          <span className="nd-body-l leading-[1.5]">{cat.label}</span>
+                        </button>
+                      );
+                    })}
                   </div>
-                  <h3 className="text-lg font-semibold text-[#F5F5F5] group-hover:text-white transition-colors mb-2">
-                    {item.title}
-                  </h3>
-                  <p className="text-sm text-[#A0A0A0] leading-relaxed line-clamp-2 mb-4">
-                    {item.excerpt}
-                  </p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs text-[#A0A0A0] font-mono">
-                      {item.readTime} read
-                    </span>
-                    <span className="text-sm text-[#A0A0A0] group-hover:text-[#14F195] transition-colors flex items-center gap-1">
-                      Read
-                      <Arrow className="w-4 h-4" />
-                    </span>
-                  </div>
-                </motion.article>
-              ))}
-            </AnimatePresence>
+                </div>
+
+                <div className="w-16 divide-y divide-nd-border-light border-t xl:border-t-0 border-nd-border-light grow-0 shrink-0 overflow-hidden relative hidden xl:block">
+                  <div className="h-0 mb-[-1px]" />
+                </div>
+
+                <div className="divide-y divide-nd-border-light border-t xl:border-t-0 border-nd-border-light grow overflow-hidden relative">
+                  <div className="h-0 mb-[-1px]" />
+                  {visible.map((item) => (
+                    <a
+                      key={item.slug}
+                      href={`/news/${item.slug}`}
+                      className="flex flex-row items-stretch gap-4 min-w-0 p-4 md:p-5 xl:px-8 group text-inherit"
+                    >
+                      <div className="relative w-[104px] md:w-32 h-[68px] md:h-20 rounded-lg overflow-hidden shrink-0 my-auto hidden sm:block">
+                        <Image
+                          src={`/uploads/posts/${item.slug}/heroImage.webp`}
+                          alt={item.title}
+                          fill
+                          sizes="128px"
+                          className="object-cover"
+                        />
+                      </div>
+                      <div className="flex flex-col justify-center min-w-0">
+                        <div className="flex items-center gap-2 text-nd-mid-em-text">
+                          <span className="w-2 h-2 rounded-full shrink-0" style={{ background: catColor(item.cat) || "#fff" }} />
+                          <span className="font-brand-mono text-[12px] leading-[1.14] font-bold uppercase tracking-wide">
+                            {item.cat}
+                          </span>
+                          <span className="opacity-50">&middot;</span>
+                          <span className="nd-body-s">{item.date}</span>
+                        </div>
+                        <h3 className="nd-body-l font-medium mt-1.5 line-clamp-1 md:line-clamp-2">
+                          {item.title}
+                        </h3>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+
+                <div className="flex flex-1 flex-row divide-x divide-nd-border-light border-t border-nd-border-light xl:hidden">
+                  <button
+                    className="py-3 px-5 flex flex-col items-start justify-start gap-2.5 w-full hover:bg-nd-border-light/20 disabled:opacity-50 disabled:cursor-not-allowed"
+                    type="button"
+                    onClick={() => changePage(-1)}
+                    disabled={page === 0}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor" className="w-4 h-4 -mt-0.5">
+                      <path d="M14.29 6.29 8.59 12l5.7 5.71 1.42-1.42-4.3-4.29 4.3-4.29z" />
+                    </svg>
+                    <span className="nd-body-l leading-[1.5]">Previous</span>
+                  </button>
+                  <button
+                    className="py-3 px-5 flex flex-col items-end justify-end gap-2.5 w-full hover:bg-nd-border-light/20 disabled:opacity-50 disabled:cursor-not-allowed"
+                    type="button"
+                    onClick={() => changePage(1)}
+                    disabled={page >= pageCount - 1}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor" className="w-4 h-4 -mt-0.5">
+                      <path d="m9.71 17.71 5.7-5.71-5.7-5.71-1.42 1.42 4.3 4.29-4.3 4.29z" />
+                    </svg>
+                    <span className="nd-body-l leading-[1.5]">Next</span>
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
   );
 }

@@ -1,19 +1,70 @@
 @import "tailwindcss";
 
-@theme inline {
-  --color-bg-primary: #000000;
-  --color-bg-secondary: #0a0a0a;
-  --color-text-primary: #F5F5F5;
-  --color-text-secondary: #A0A0A0;
-  --color-accent-purple: #9945FF;
-  --color-accent-green: #14F195;
-  --color-border-subtle: rgba(255, 255, 255, 0.08);
-  --color-border-hover: rgba(255, 255, 255, 0.15);
-  --color-card-bg: rgba(255, 255, 255, 0.03);
-  --color-card-hover: rgba(255, 255, 255, 0.06);
+@font-face {
+  font-family: "Diatype";
+  src: url("/fonts/diatype-light.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Diatype";
+  src: url("/fonts/diatype-regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Diatype";
+  src: url("/fonts/diatype-medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Diatype";
+  src: url("/fonts/diatype-bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "DSemi";
+  src: url("/fonts/dsemi-regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "DSemi";
+  src: url("/fonts/dsemi-medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
 
-  --font-sans: Helvetica, Arial, system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, Cantarell, "Noto Sans", sans-serif, BlinkMacSystemFont, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-  --font-mono: "Roboto Mono", SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+@theme {
+  --font-sans: "Diatype", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+  --font-mono: "DSemi", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    monospace;
+
+  --color-nd-bg: #000000;
+  --color-nd-inverse: #000000;
+  --color-nd-primary: #ffffff;
+  --color-nd-high-em-text: #ffffff;
+  --color-nd-mid-em-text: #ababba;
+  --color-nd-mid-em-text-alpha: #ffffffa3;
+  --color-nd-highlight-lavendar: #ca9ff5;
+  --color-nd-highlight-green: #55e9ab;
+  --color-nd-highlight-gold: #ffc526;
+  --color-nd-highlight-lime: #cff15e;
+  --color-nd-highlight-orange: #f48252;
+  --color-nd-border-light: #ece4fd1f;
+  --color-nd-border-prominent: #ece4fd33;
+  --color-nd-cta: #dfcdf5;
+  --color-nd-card: #0d0c11;
+  --color-nd-overlay: #0b0a10;
 }
 
 *, *::before, *::after {
@@ -25,8 +76,9 @@ html {
 }
 
 body {
+  margin: 0;
   background: #000000;
-  color: #F5F5F5;
+  color: #ffffff;
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -34,60 +86,152 @@ body {
 
 ::selection {
   background: rgba(153, 69, 255, 0.4);
-  color: #F5F5F5;
+  color: #ffffff;
 }
 
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+/* ---------- Reference type scale ---------- */
+.nd-heading-2xl {
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 40px;
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -1.2px;
 }
-::-webkit-scrollbar-track {
-  background: transparent;
+@media (min-width: 768px) {
+  .nd-heading-2xl {
+    font-size: 56px;
+    line-height: 1;
+    letter-spacing: -1.68px;
+  }
 }
-::-webkit-scrollbar-thumb {
-  background: rgba(255,255,255,0.15);
-  border-radius: 3px;
-}
-
-.gradient-text {
-  background: linear-gradient(90deg, #9945FF 0%, #14F195 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.gradient-bg {
-  background: linear-gradient(90deg, #9945FF 0%, #14F195 100%);
-}
-
-.gradient-border {
-  position: relative;
-}
-.gradient-border::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  padding: 1px;
-  border-radius: inherit;
-  background: linear-gradient(90deg, #9945FF 0%, #14F195 100%);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  pointer-events: none;
+@media (min-width: 1280px) {
+  .nd-heading-2xl {
+    font-size: 88px;
+    line-height: 1;
+    letter-spacing: -2.64px;
+  }
 }
 
-.noise-bg {
-  position: relative;
+.nd-heading-xl {
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 40px;
+  font-weight: 500;
+  line-height: 1.1;
 }
-.noise-bg::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
-  background-repeat: repeat;
-  background-size: 256px 256px;
-  pointer-events: none;
-  z-index: 0;
+@media (min-width: 768px) {
+  .nd-heading-xl {
+    font-size: 48px;
+    line-height: 1.083;
+  }
+}
+@media (min-width: 1280px) {
+  .nd-heading-xl {
+    font-size: 80px;
+    line-height: 1;
+  }
+}
+
+.nd-heading-l {
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 32px;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -1.28px;
+}
+@media (min-width: 768px) {
+  .nd-heading-l {
+    font-size: 40px;
+    line-height: 1.1;
+    letter-spacing: -1.6px;
+  }
+}
+@media (min-width: 1280px) {
+  .nd-heading-l {
+    font-size: 64px;
+    line-height: 1.125;
+    letter-spacing: -2.56px;
+  }
+}
+
+.nd-heading-m {
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.333;
+  letter-spacing: -0.54px;
+}
+
+.nd-heading-s {
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: -0.32px;
+}
+
+.nd-body-2xl {
+  font-size: 20px;
+  line-height: 1.4;
+}
+.nd-body-xl {
+  font-size: 18px;
+  line-height: 1.33;
+  letter-spacing: -0.36px;
+}
+.nd-body-l {
+  font-size: 16px;
+  line-height: 1.375;
+  letter-spacing: -0.16px;
+}
+.nd-body-m {
+  font-size: 16px;
+  line-height: 1.25;
+  letter-spacing: -0.16px;
+}
+.nd-body-s {
+  font-size: 14px;
+  line-height: 1.42;
+  letter-spacing: -0.14px;
+}
+
+.font-brand-mono {
+  font-family: "DSemi", monospace;
+}
+
+/* ---------- Terminal loader ---------- */
+.terminal-loader {
+  width: 65px;
+  height: 13px;
+  -webkit-mask: linear-gradient(90deg, #000 25%, #0000 0) 0 / 10%;
+  background: linear-gradient(#55e9ab 0 0) 0 / 8% no-repeat #ece4fd33;
+  background-position: -10% 0;
+}
+.terminal-loader.animate {
+  animation: l4 1s steps(11) infinite;
+}
+@keyframes l4 {
+  to {
+    background-size: 10%;
+    background-position: 120% 0;
+  }
+}
+
+/* ---------- Misc utilities ---------- */
+.m-0 {
+  margin: 0;
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hidden {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 .hide-scrollbar::-webkit-scrollbar {
