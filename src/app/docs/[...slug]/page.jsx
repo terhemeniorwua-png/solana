@@ -16,23 +16,22 @@ import {
 
 export const revalidate = 604800;
 
-export const metadata = {
-  title: "Finance on Solana",
-  description:
-    "Solana finance primitives including payments, tokenization, and DeFi building blocks.",
-};
-
-export default async function FinanceDocsPage() {
-  const page = getDocsPage(["finance"]);
+export default async function DocsFallbackPage({ params }) {
+  const { slug } = await params;
+  const slugArray = Array.isArray(slug) ? slug : [slug];
+  const page = getDocsPage(slugArray);
   if (!page) notFound();
   const tree = getDocsTree();
+  const section = slugArray[0];
+  const sectionRoute = `/docs/${section}`;
   const sidebarTree = {
     ...tree,
     children: flattenChildlessFolders(
-      getSectionSidebarTree(tree, "/docs/finance").children
+      getSectionSidebarTree(tree, sectionRoute).children
     ),
   };
   const toc = extractToc(page.body);
+  const href = `/docs/${slugArray.join("/")}`;
 
   return (
     <DocsPageView
@@ -40,9 +39,11 @@ export default async function FinanceDocsPage() {
       description={page.data.description}
       filePath={page.filePath}
       toc={toc}
-      href="/docs/finance"
+      hideTableOfContents={page.data.hideTableOfContents}
+      hidePageNavigation={page.data.hidePageNavigation}
+      href={href}
       sidebarTree={sidebarTree}
-      pageTree={getSectionSidebarTree(tree, "/docs/finance")}
+      pageTree={getSectionSidebarTree(tree, sectionRoute)}
       crumbs={[{ name: page.data.title }]}
       markdown={`${page.body}`}
     >

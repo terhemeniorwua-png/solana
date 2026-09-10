@@ -16,14 +16,14 @@ import {
 
 export const revalidate = 604800;
 
-export const metadata = {
-  title: "Finance on Solana",
-  description:
-    "Solana finance primitives including payments, tokenization, and DeFi building blocks.",
-};
+export async function generateStaticParams() {
+  return [{ slug: ["privacy"] }];
+}
 
-export default async function FinanceDocsPage() {
-  const page = getDocsPage(["finance"]);
+export default async function FinanceChildPage({ params }) {
+  const { slug } = await params;
+  const slugArray = Array.isArray(slug) ? slug : [slug];
+  const page = getDocsPage(["finance", ...slugArray]);
   if (!page) notFound();
   const tree = getDocsTree();
   const sidebarTree = {
@@ -33,6 +33,7 @@ export default async function FinanceDocsPage() {
     ),
   };
   const toc = extractToc(page.body);
+  const href = `/docs/finance/${slugArray.join("/")}`;
 
   return (
     <DocsPageView
@@ -40,10 +41,10 @@ export default async function FinanceDocsPage() {
       description={page.data.description}
       filePath={page.filePath}
       toc={toc}
-      href="/docs/finance"
+      href={href}
       sidebarTree={sidebarTree}
       pageTree={getSectionSidebarTree(tree, "/docs/finance")}
-      crumbs={[{ name: page.data.title }]}
+      crumbs={[{ name: "Finance" }, { name: page.data.title }]}
       markdown={`${page.body}`}
     >
       <MDXRemote

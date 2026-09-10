@@ -3,6 +3,7 @@ import NextLink from "next/link";
 import { Rocket } from "@boxicons/react/Rocket";
 import { Tabs, Tab } from "@/app/components/docs/Tabs";
 import { Accordion, Accordions } from "@/app/components/docs/Accordion";
+import { CodeTabs } from "@/app/components/docs/CodeTabs";
 
 const HEADING_LEVELS = new Set(["h1", "h2", "h3", "h4", "h5", "h6"]);
 
@@ -177,6 +178,7 @@ export const mdxComponents = {
   Callout,
   Tabs,
   Tab,
+  CodeTabs,
   Accordion,
   Accordions,
   Rocket: (props) => createElement(iconMap.Rocket, { width: 20, height: 20, ...props }),
