@@ -1,0 +1,370 @@
+.docs-shell {
+  --fd-background: 0deg 0% 8.04%;
+  --fd-foreground: 0 0% 92%;
+  --fd-muted: 0 0% 12.9%;
+  --fd-muted-foreground: 0 0% 60.9%;
+  --fd-popover: 0 0% 9.8%;
+  --fd-popover-foreground: 0 0% 88%;
+  --fd-card: 0 0% 9.8%;
+  --fd-card-foreground: 0 0% 98%;
+  --fd-border: 0 0% 14%;
+  --fd-primary: 0 0% 98%;
+  --fd-primary-foreground: 0 0% 9%;
+  --fd-secondary: 0 0% 12.9%;
+  --fd-secondary-foreground: 0 0% 98%;
+  --fd-accent: 0 0% 16.9%;
+  --fd-accent-foreground: 0 0% 90%;
+  --fd-ring: 0 0% 14.9%;
+
+  --tw-prose-body: hsl(var(--fd-foreground) / 90%);
+  --tw-prose-headings: hsl(var(--fd-foreground) / 1);
+  --tw-prose-lead: hsl(var(--fd-foreground) / 1);
+  --tw-prose-links: hsl(var(--fd-primary) / 100%);
+  --tw-prose-bold: hsl(var(--fd-foreground) / 1);
+  --tw-prose-counters: hsl(var(--fd-muted-foreground) / 1);
+  --tw-prose-bullets: hsl(var(--fd-muted-foreground) / 1);
+  --tw-prose-hr: hsl(var(--fd-border) / 1);
+  --tw-prose-quotes: hsl(var(--fd-foreground) / 1);
+  --tw-prose-quote-borders: hsl(var(--fd-border) / 1);
+  --tw-prose-captions: hsl(var(--fd-muted-foreground) / 1);
+  --tw-prose-kbd: hsl(var(--fd-foreground) / 1);
+  --tw-prose-kbd-shadows: hsl(var(--fd-foreground) / 1);
+  --tw-prose-code: hsl(var(--fd-foreground) / 1);
+  --tw-prose-pre-code: hsl(var(--fd-foreground) / 1);
+  --tw-prose-pre-bg: hsl(var(--fd-muted) / 1);
+  --tw-prose-th-borders: hsl(var(--fd-border) / 1);
+  --tw-prose-td-borders: hsl(var(--fd-border) / 1);
+
+  background-color: hsl(var(--fd-background) / 1);
+  color: hsl(var(--fd-foreground) / 1);
+  font-size: 1.3125rem;
+  line-height: 140%;
+  font-family: var(--font-sans);
+}
+
+.docs-shell h1,
+.docs-shell h2,
+.docs-shell h3,
+.docs-shell h4,
+.docs-shell h5,
+.docs-shell h6,
+.docs-shell p {
+  margin-bottom: 0.5rem;
+  color: inherit;
+}
+
+.docs-shell ul {
+  padding-left: 2rem;
+}
+
+.docs-shell a {
+  color: var(--mdx-link-color, #00ffbd);
+  text-decoration: none;
+}
+
+.docs-shell .container,
+.docs-shell .container-fluid,
+.docs-shell .container-xl {
+  width: 100%;
+  padding-right: 20px;
+  padding-left: 20px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+@media (min-width: 576px) {
+  .docs-shell .container {
+    max-width: 540px !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .docs-shell .container {
+    max-width: 720px !important;
+  }
+}
+
+@media (min-width: 992px) {
+  .docs-shell .container {
+    max-width: 960px !important;
+  }
+}
+
+@media (min-width: 1280px) {
+  .docs-shell .container,
+  .docs-shell .container-xl {
+    max-width: 1140px !important;
+  }
+}
+
+.docs-shell .h1,
+.docs-shell .h2,
+.docs-shell .h3,
+.docs-shell .h4,
+.docs-shell .h5,
+.docs-shell .h6 {
+  margin-bottom: 0.5rem;
+  color: inherit;
+}
+
+.docs-shell .h1 {
+  font-size: clamp(3.5rem, 8vw, 6rem);
+  font-weight: 700;
+  line-height: 100%;
+  letter-spacing: -0.03rem;
+}
+
+.docs-shell .h2 {
+  font-size: clamp(2.625rem, 8vw, 4.5rem);
+  font-weight: bold;
+  line-height: 105%;
+  letter-spacing: -0.0425rem;
+}
+
+.docs-shell .h3 {
+  font-size: clamp(2.25rem, 8vw, 3.5rem);
+  font-weight: bold;
+  line-height: 105%;
+}
+
+.docs-shell .h4 {
+  font-size: 2.625rem;
+  line-height: 110%;
+  letter-spacing: -1px;
+  font-weight: 700;
+}
+
+.docs-shell .h5 {
+  font-size: 1.75rem;
+  line-height: 118%;
+  font-weight: bold;
+}
+
+.docs-shell .h6 {
+  font-size: 1.5rem;
+  line-height: 117%;
+}
+
+.docs-shell .subdued {
+  color: #c4c4c4;
+}
+
+.docs-shell .lead {
+  font-size: 1.25rem;
+  font-weight: 300;
+  line-height: 1.5;
+}
+
+.docs-shell .prose {
+  color: var(--tw-prose-body);
+  max-width: none;
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+.docs-shell .prose-xl {
+  font-size: 1.25rem;
+  line-height: 1.8;
+}
+
+.docs-shell .prose :is(h1, h2, h3, h4, h5, h6) {
+  color: var(--tw-prose-headings);
+  scroll-margin-top: 7rem;
+}
+
+.docs-shell .prose h1 {
+  font-weight: 800;
+  font-size: 2.25em;
+  margin-top: 0;
+  margin-bottom: 0.8888889em;
+  line-height: 1.1111111;
+}
+
+.docs-shell .prose h2 {
+  font-weight: 600;
+  font-size: 1.5em;
+  margin-top: 2em;
+  margin-bottom: 1em;
+  line-height: 1.3333333;
+}
+
+.docs-shell .prose h3 {
+  font-weight: 600;
+  font-size: 1.25em;
+  margin-top: 1.6em;
+  margin-bottom: 0.6em;
+  line-height: 1.6;
+}
+
+.docs-shell .prose h4 {
+  font-weight: 600;
+  font-size: 1.25em;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  line-height: 1.5;
+}
+
+.docs-shell .prose h2 + *,
+.docs-shell .prose h3 + *,
+.docs-shell .prose h4 + * {
+  margin-top: 0;
+}
+
+.docs-shell .prose p {
+  margin-top: 1.25em;
+  margin-bottom: 1.25em;
+}
+
+.docs-shell .prose a {
+  color: var(--tw-prose-links);
+  font-weight: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.docs-shell .prose strong {
+  color: var(--tw-prose-bold);
+  font-weight: 600;
+}
+
+.docs-shell .prose a strong {
+  color: inherit;
+}
+
+.docs-shell .prose ul {
+  list-style-type: disc;
+  margin-top: 1.25em;
+  margin-bottom: 1.25em;
+  padding-inline-start: 1rem;
+}
+
+.docs-shell .prose ol {
+  list-style-type: decimal;
+  margin-top: 1.25em;
+  margin-bottom: 1.25em;
+  padding-inline-start: 1.625em;
+}
+
+.docs-shell .prose li {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+.docs-shell .prose ol > li {
+  padding-inline-start: 0.375em;
+}
+
+.docs-shell .prose ul > li {
+  padding-inline-start: 0;
+}
+
+.docs-shell .prose ul ul,
+.docs-shell .prose ul ol,
+.docs-shell .prose ol ul,
+.docs-shell .prose ol ol {
+  margin-top: 0.75em;
+  margin-bottom: 0.75em;
+}
+
+.docs-shell .prose blockquote {
+  margin-top: 1.6em;
+  margin-bottom: 1.6em;
+  padding-inline-start: 1em;
+  font-weight: 500;
+  font-style: italic;
+  color: var(--tw-prose-quotes);
+  border-inline-start-width: 0.25rem;
+  border-inline-start-color: var(--tw-prose-quote-borders);
+}
+
+.docs-shell .prose img {
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
+
+.docs-shell .prose figure {
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
+
+.docs-shell .prose figure > * {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.docs-shell .prose figcaption {
+  color: var(--tw-prose-captions);
+  font-size: 0.875em;
+  line-height: 1.4285714;
+  margin-top: 0.8571429em;
+}
+
+.docs-shell .prose code {
+  color: var(--tw-prose-code);
+  font-weight: 400;
+  padding: 3px;
+  border: 1px solid hsl(var(--fd-border) / 1);
+  font-size: 13px;
+  border-radius: 5px;
+  background: hsl(var(--fd-muted) / 1);
+  font-family: var(--font-mono);
+}
+
+.docs-shell .prose a code,
+.docs-shell .prose h1 code,
+.docs-shell .prose h2 code,
+.docs-shell .prose h3 code,
+.docs-shell .prose h4 code,
+.docs-shell .prose blockquote code {
+  color: inherit;
+}
+
+.docs-shell .prose h2 code {
+  font-size: 0.875em;
+}
+
+.docs-shell .prose h3 code {
+  font-size: 0.9em;
+}
+
+.docs-shell .prose table {
+  font-size: 0.875em;
+  line-height: 1.7142857;
+  width: 100%;
+  table-layout: auto;
+  margin-top: 2em;
+  margin-bottom: 2em;
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+  border-radius: var(--radius, 0.5rem);
+  border-width: 1px;
+  border-color: hsl(var(--fd-border) / 1);
+  background-color: #0c011d;
+}
+
+.docs-shell .prose th {
+  text-align: start;
+  border-inline-start-width: 1px;
+  background-color: hsl(var(--fd-muted) / 1);
+  padding: 0.625rem;
+  color: var(--tw-prose-headings);
+  font-weight: 600;
+}
+
+.docs-shell .prose td {
+  text-align: start;
+  border-inline-start-width: 1px;
+  padding: 0.625rem;
+}
+
+.docs-shell .prose th:first-child,
+.docs-shell .prose td:first-child {
+  border-inline-start-width: 0;
+}
+
+.docs-shell .prose thead th,
+.docs-shell .prose thead td {
+  border-bottom-width: 1px;
+  border-bottom-color: var(--tw-prose-th-borders);
+}

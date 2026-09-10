@@ -7,7 +7,6 @@ import Institutions from "./components/Institutions";
 import BlogGrid from "./components/BlogGrid";
 import VideoStories from "./components/VideoStories";
 import CommunityCTA from "./components/CommunityCTA";
-import Footer from "./components/Footer";
 
 export default function Page() {
   return (
@@ -67,7 +66,6 @@ export default function Page() {
         <VideoStories />
         <CommunityCTA />
       </div>
-      <Footer />
       {/* Floating Ask AI assistant */}
       <button
         type="button"
