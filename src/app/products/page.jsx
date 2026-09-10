@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Hero } from "@/app/components/solutions/Hero";
 import { WhatIsIt } from "@/app/components/solutions/WhatIsIt";
 import { Products } from "@/app/components/solutions/Products";
@@ -468,12 +469,12 @@ export default function ProductsPage() {
                 to get started.
               </p>
               <div className="mt-8 flex flex-wrap gap-4">
-                <a
+                <Link
                   href="/docs"
                   className="inline-flex items-center justify-center rounded-none border border-white bg-white px-6 py-3 text-sm font-medium text-black transition-all hover:bg-white/90"
                 >
                   Read the docs
-                </a>
+                </Link>
                 <a
                   href="/products"
                   className="inline-flex items-center justify-center rounded-none border border-white/20 bg-transparent px-6 py-3 text-sm font-medium text-white transition-all hover:bg-white/10"

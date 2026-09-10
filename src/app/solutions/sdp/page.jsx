@@ -307,7 +307,7 @@ export default function SdpPage() {
               Build any financial product, without worrying about the infrastructure
             </h2>
             <p className="mt-4 max-w-2xl text-nd-mid-em-text">
-              Whether you're issuing a stablecoin, orchestrating cross-border payments, or tokenizing real-world assets, SDP provides the most reliable APIs and infrastructure to make it happen.
+              Whether you&apos;re issuing a stablecoin, orchestrating cross-border payments, or tokenizing real-world assets, SDP provides the most reliable APIs and infrastructure to make it happen.
             </p>
             <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6">
               {TESTIMONIALS.map((t) => (
