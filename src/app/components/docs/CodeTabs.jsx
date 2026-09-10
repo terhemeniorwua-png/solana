@@ -14,7 +14,12 @@ const LANG_LABEL = {
 };
 
 function langOf(child) {
-  const cls = child?.props?.className || "";
+  const inner = child?.props?.children;
+  const cls =
+    child?.props?.className ||
+    (inner && !Array.isArray(inner) && inner.props?.className) ||
+    (Array.isArray(inner) ? inner[0]?.props?.className : "") ||
+    "";
   const match = /language-([\w-]+)/.exec(String(cls));
   return match ? match[1] : "";
 }
