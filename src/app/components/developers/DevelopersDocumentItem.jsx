@@ -1,7 +1,7 @@
 import { ArrowUpRight } from "@boxicons/react/ArrowUpRight";
 import { ArrowOutUpRightSquare } from "@boxicons/react/ArrowOutUpRightSquare";
 import Button from "@/app/components/shared/Button";
-import { learnCopy } from "@/data/learn";
+import { developersCopy } from "@/data/developers";
 import styles from "./DevelopersDocumentItem.module.css";
 
 export default function DevelopersDocumentItem({
@@ -20,10 +20,11 @@ export default function DevelopersDocumentItem({
         <Button
           to={url}
           newTab={newTab}
+          prefetch={false}
           className={styles["document-item__cta"]}
-          aria-label={ctaLabel || learnCopy.developers.documents.viewAll}
+          aria-label={ctaLabel || developersCopy.documents.viewAll}
         >
-          <span>{ctaLabel || learnCopy.developers.documents.viewAll}</span>
+          <span>{ctaLabel || developersCopy.documents.viewAll}</span>
           {newTab ? <ArrowOutUpRightSquare /> : <ArrowUpRight />}
         </Button>
       </div>

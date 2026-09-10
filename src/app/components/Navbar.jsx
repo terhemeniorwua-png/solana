@@ -1,8 +1,9 @@
 "use client";
 import { useState, useEffect, useRef, createElement } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { ICONS, NAV_MENUS } from "./navData";
+import { ICONS, NAV_MENUS, NAV_MATCH_RULES } from "./navData";
 
 /* ---------------- shared svgs ---------------- */
 
@@ -131,6 +132,7 @@ function ItemRow({ item }) {
   return (
     <Link
       href={item.href}
+      prefetch={false}
       className="block no-underline text-inherit group/link"
       target={item.ext ? "_blank" : undefined}
       rel={item.ext ? "noopener noreferrer" : undefined}
@@ -284,6 +286,13 @@ export default function Navbar() {
   const [mobileAccordion, setMobileAccordion] = useState(0);
   const timeoutRef = useRef(null);
   const headerRef = useRef(null);
+  const pathname = usePathname();
+
+  const isMenuActive = (menu) =>
+    (NAV_MATCH_RULES[menu.id] || []).some((rule) => {
+      if (rule.exclude?.some((value) => pathname.includes(value))) return false;
+      return rule.type === "equals" ? pathname === rule.value : pathname.includes(rule.value);
+    });
 
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? "hidden" : "";
@@ -357,7 +366,8 @@ export default function Navbar() {
                           data-state={activeDropdown === idx ? "open" : "closed"}
                           aria-expanded={activeDropdown === idx}
                           data-slot="navigation-menu-trigger"
-                          className="group h-9 flex justify-between items-center w-full xl:w-auto py-1.5 xl:py-1 px-4 xl:px-3.5 text-[rgba(255,255,255,0.64)] text-[16px] xl:text-[15px] leading-[1.5] font-normal bg-transparent border-0 rounded-full hover:text-white focus:text-white hover:bg-white/[0.08] focus:bg-white/[0.08] relative transition-colors duration-200 data-[state=open]:text-white data-[state=open]:bg-white/[0.08]"
+                          className={"group h-9 flex justify-between items-center w-full xl:w-auto py-1.5 xl:py-1 px-4 xl:px-3.5 text-[rgba(255,255,255,0.64)] text-[16px] xl:text-[15px] leading-[1.5] font-normal bg-transparent border-0 rounded-full hover:text-white focus:text-white hover:bg-white/[0.08] focus:bg-white/[0.08] relative transition-colors duration-200 data-[state=open]:text-white data-[state=open]:bg-white/[0.08]" +
+              (isMenuActive(menu) ? " !text-white" : "")}
                           onMouseEnter={() => enter(idx)}
                           onMouseLeave={leave}
                           onClick={() => setActiveDropdown(activeDropdown === idx ? null : idx)}

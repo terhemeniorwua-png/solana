@@ -1,7 +1,7 @@
 import { ArrowUpRight } from "@boxicons/react/ArrowUpRight";
 import { ArrowOutUpRightSquare } from "@boxicons/react/ArrowOutUpRightSquare";
 import { Link, InlineLink } from "@/lib/Link";
-import { learnCopy } from "@/data/learn";
+import { developersCopy } from "@/data/developers";
 import styles from "./DevelopersResourceItem.module.css";
 
 export default function DevelopersResourceItem({
@@ -42,7 +42,7 @@ export default function DevelopersResourceItem({
           </div>
         </div>
         <div className={styles["resource-item__cta"]}>
-          <span>{ctaLabel || learnCopy.developers.resources.learnMore}</span>
+          <span>{ctaLabel || developersCopy.guides.learnMore}</span>
           {isExternal ? <ArrowOutUpRightSquare /> : <ArrowUpRight />}
         </div>
       </div>

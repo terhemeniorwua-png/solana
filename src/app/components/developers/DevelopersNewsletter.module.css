@@ -1,0 +1,9 @@
+.signup-form {
+  margin-top: 40px;
+}
+
+@media (min-width: 768px) {
+  .signup-form {
+    margin-top: 52px;
+  }
+}

@@ -24,6 +24,7 @@ export default function DevelopersHeroSection({
                 <Button
                   to={buttons.cta.href}
                   newTab={buttons.cta.href?.startsWith("http")}
+                  prefetch={buttons.cta.prefetch}
                   variant="secondary"
                 >
                   {buttons.cta.label}

@@ -161,6 +161,26 @@ body {
   }
 }
 
+.nd-heading-xs {
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+@media (min-width: 768px) {
+  .nd-heading-xs {
+    font-size: 18px;
+    line-height: 1.333;
+  }
+}
+@media (min-width: 1280px) {
+  .nd-heading-xs {
+    font-size: 22px;
+    line-height: 1.273;
+  }
+}
+
 .nd-heading-m {
   margin-top: 0;
   margin-bottom: 0;

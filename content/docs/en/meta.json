@@ -1,0 +1,20 @@
+{
+  "title": "Solana Documentation",
+  "pages": [
+    "intro",
+    "core",
+    "tokens",
+    "programs",
+    "frontend",
+    "clients",
+    "references",
+    "rpc",
+    "finance",
+    "payments",
+    "tokenization",
+    "defi",
+    "tools",
+    "---",
+    "[Coding with agents](/docs/intro/coding-with-agents)"
+  ]
+}
