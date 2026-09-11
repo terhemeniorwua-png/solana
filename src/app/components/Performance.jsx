@@ -1,7 +1,7 @@
 "use client";
-import Image from "next/image";
 import { useCountUp } from "@/app/hooks/useCountUp";
 import { motion } from "framer-motion";
+import PerformanceBackground from "@/app/components/PerformanceBackground";
 
 const HEADLINE_STATS = [
   {
@@ -60,13 +60,7 @@ export default function Performance() {
     <div className="w-full">
       <hr className="border-nd-border-light border-t m-0 !opacity-100" />
       <section className="relative overflow-hidden bg-nd-inverse text-nd-high-em-text text-left m-0">
-        <Image
-          alt="Performance background"
-          fill
-          sizes="150vw"
-          src="/img/index/performance-bg.webp"
-          className="!absolute inset-0 z-0 object-cover"
-        />
+        <PerformanceBackground />
         <div className="max-w-screen-2xl w-full mx-auto px-5 md:px-8 xl:px-10 py-10 flex flex-col justify-between relative">
           <div className="flex flex-col xl:flex-row gap-[52px] justify-between items-start">
             <div className="xl:max-w-[50%] grow-0">
