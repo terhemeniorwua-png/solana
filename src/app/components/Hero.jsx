@@ -14,7 +14,7 @@ export default function Hero() {
       <HeroBackground />
 
       <div className="relative z-10 flex min-h-[700px]">
-        <div className="max-w-screen-2xl w-full mx-auto px-5 md:px-8 xl:px-10 flex flex-col justify-between relative pt-12 xl:pt-[165px] md:pb-8 xl:pb-10 min-h-[calc(100vh-70px)]">
+        <div className="max-w-screen-2xl w-full mx-auto px-5 md:px-8 xl:px-10 flex flex-col justify-between relative pt-12 xl:pt-[120px] md:pb-8 xl:pb-10 min-h-[calc(100vh-70px)]">
           <div className="max-w-5xl">
             <h1 className="nd-heading-2xl" id="hero-title">
               The capital market{" "}
