@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { HeroBackground } from "@/app/components/HeroBackground";
 
 const BTN_BASE =
   "inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 dark:ring-offset-zinc-950 dark:focus-visible:ring-zinc-300";
@@ -10,16 +11,9 @@ export default function Hero() {
       className="relative overflow-hidden bg-nd-inverse text-nd-high-em-text text-left border-b border-nd-border-light m-0"
       aria-labelledby="hero-title"
     >
-      <Image
-        alt=""
-        fill
-        priority
-        sizes="150vw"
-        src="/img/index/hero-bg.webp"
-        className="!absolute inset-0 z-0 object-cover"
-      />
+      <HeroBackground />
 
-      <div className="flex min-h-[700px]">
+      <div className="relative z-10 flex min-h-[700px]">
         <div className="max-w-screen-2xl w-full mx-auto px-5 md:px-8 xl:px-10 flex flex-col justify-between relative pt-12 xl:pt-[165px] md:pb-8 xl:pb-10 min-h-[calc(100vh-70px)]">
           <div className="max-w-5xl">
             <h1 className="nd-heading-2xl" id="hero-title">
